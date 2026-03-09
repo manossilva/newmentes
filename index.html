@@ -23,23 +23,22 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 button{font-family:'Syne',sans-serif;cursor:pointer}
 input,textarea{font-family:'Syne',sans-serif}
-
-/* grain */
 body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:200px 200px;
 }
 
-/* ── VIEWS ── */
 .view{display:none;height:100dvh}
 .view.active{display:flex;flex-direction:column}
 
-/* ── AUTH ── */
+/* AUTH */
 #view-login,#view-register{
   align-items:center;justify-content:center;padding:24px;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,#2D1060 0%,transparent 70%),
-             radial-gradient(ellipse 60% 40% at 100% 100%,#1A0A40 0%,transparent 60%),var(--bg);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,#2D1060 0%,transparent 70%),
+    radial-gradient(ellipse 60% 40% at 100% 100%,#1A0A40 0%,transparent 60%),
+    var(--bg);
 }
 .brand{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,3rem);font-weight:400;letter-spacing:.08em;margin-bottom:4px;text-align:center}
 .brand span{color:var(--gold);font-style:italic}
@@ -50,9 +49,8 @@ body::after{
 .card-sub strong{color:var(--purpleL)}
 label{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--textDim);margin-bottom:6px}
 input[type=tel],input[type=text]{
-  width:100%;padding:12px 14px;background:var(--s2);border:1px solid var(--border);
-  border-radius:10px;color:var(--text);font-size:.9rem;outline:none;
-  transition:border .2s,box-shadow .2s;margin-bottom:16px;display:block;
+  width:100%;padding:12px 14px;background:var(--s2);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-size:.9rem;outline:none;transition:border .2s,box-shadow .2s;margin-bottom:16px;display:block;
 }
 input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
 input::placeholder{color:var(--textDim);opacity:.6}
@@ -65,72 +63,55 @@ input::placeholder{color:var(--textDim);opacity:.6}
 .btn:active:not(:disabled){transform:scale(.98)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--textDim);box-shadow:none;margin-top:10px}
-.btn-ghost:hover:not(:disabled){background:var(--s2);box-shadow:none;color:var(--text);border-color:var(--purple)}
-.demo-divider{margin-top:24px;border-top:1px solid var(--border);padding-top:20px}
-.demo-label-row{font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--textDim);margin-bottom:12px;text-align:center}
-.demo-row{display:flex;gap:8px}
-.demo-chip{
-  flex:1;padding:9px 10px;border-radius:8px;border:1px dashed var(--border);
-  background:var(--s2);cursor:pointer;text-align:center;
-  transition:border-color .2s,background .2s;
-}
-.demo-chip:hover{border-color:var(--purple);background:var(--s3)}
-.demo-chip-label{font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--textDim);margin-bottom:3px}
-.demo-chip-value{font-size:.78rem;font-weight:700;color:var(--purpleL)}
+.btn-ghost:hover:not(:disabled){background:var(--s2);color:var(--text);border-color:var(--purple)}
 
-/* ── CHAT ── */
+/* CHAT */
 #view-chat{background:var(--bg)}
 .chat-header{
-  padding:14px 18px;background:var(--s1);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.4);flex-shrink:0;
+  padding:12px 16px;background:var(--s1);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 2px 12px rgba(0,0,0,.4);flex-shrink:0;
 }
+.back-arrow{
+  background:none;border:none;color:var(--textDim);font-size:1.25rem;
+  padding:4px 6px;border-radius:6px;transition:color .2s;line-height:1;flex-shrink:0;
+}
+.back-arrow:hover{color:var(--text)}
 .avatar{
-  width:40px;height:40px;border-radius:50%;
+  width:38px;height:38px;border-radius:50%;
   background:linear-gradient(135deg,var(--purple),var(--purpleD));
   display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff;flex-shrink:0;
-  box-shadow:0 0 12px rgba(124,58,237,.4);
+  font-family:'Cormorant Garamond',serif;font-size:1rem;color:#fff;flex-shrink:0;
+  box-shadow:0 0 10px rgba(124,58,237,.4);
 }
-.avatar-sm{width:36px;height:36px;font-size:.9rem}
+.avatar-sm{width:34px;height:34px;font-size:.85rem}
 .header-info{flex:1;min-width:0}
-.header-name{font-size:.9rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.header-status{font-size:.7rem;color:var(--gold);letter-spacing:.08em}
+.header-name{font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-status{font-size:.68rem;color:var(--gold);letter-spacing:.06em}
 .playbook-btn{
-  padding:6px 12px;border-radius:8px;background:transparent;border:1px solid var(--gold);
-  color:var(--gold);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  transition:background .2s;
+  padding:5px 11px;border-radius:7px;background:transparent;border:1px solid var(--gold);
+  color:var(--gold);font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  transition:background .2s;white-space:nowrap;
 }
 .playbook-btn:hover{background:rgba(201,168,76,.12)}
-.messages-area{
-  flex:1;overflow-y:auto;padding:16px 12px;
-  display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth;
-}
+.messages-area{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth}
 .msg-row{display:flex}
 .msg-row.user{justify-content:flex-end}
 .msg-row.assistant{justify-content:flex-start}
-.bubble{
-  max-width:min(72%,320px);padding:10px 14px;border-radius:18px;
-  font-size:.88rem;line-height:1.55;word-break:break-word;
-}
+.bubble{max-width:min(74%,320px);padding:10px 14px;border-radius:18px;font-size:.875rem;line-height:1.55;word-break:break-word}
 .bubble.user{background:var(--userBub);border-bottom-right-radius:4px;box-shadow:0 2px 8px rgba(91,33,182,.3)}
 .bubble.assistant{background:var(--aiBub);border:1px solid var(--border);border-bottom-left-radius:4px}
-.bubble-time{font-size:.62rem;color:rgba(255,255,255,.35);text-align:right;margin-top:4px}
+.bubble-time{font-size:.6rem;color:rgba(255,255,255,.3);text-align:right;margin-top:4px}
 .typing-dots{display:flex;gap:4px;padding:4px 0;align-items:center}
-.typing-dots span{
-  width:7px;height:7px;border-radius:50%;background:var(--purple);
-  animation:blink 1.2s infinite ease-in-out;
-}
+.typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--purple);animation:blink 1.2s infinite ease-in-out}
 .typing-dots span:nth-child(2){animation-delay:.2s}
 .typing-dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
-.input-bar{
-  padding:10px 12px;background:var(--s1);border-top:1px solid var(--border);
-  display:flex;gap:8px;align-items:flex-end;flex-shrink:0;
-}
+.input-bar{padding:10px 12px;background:var(--s1);border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
 #chat-textarea{
-  flex:1;padding:10px 14px;background:var(--s2);border:1px solid var(--border);
-  border-radius:22px;color:var(--text);font-size:.88rem;outline:none;
-  resize:none;max-height:100px;overflow-y:auto;transition:border .2s;line-height:1.4;min-height:42px;
+  flex:1;padding:10px 14px;background:var(--s2);border:1px solid var(--border);border-radius:22px;
+  color:var(--text);font-size:.875rem;outline:none;resize:none;max-height:100px;
+  overflow-y:auto;transition:border .2s;line-height:1.4;min-height:42px;
 }
 #chat-textarea:focus{border-color:var(--purple)}
 #chat-textarea::placeholder{color:var(--textDim);opacity:.6}
@@ -143,186 +124,129 @@ input::placeholder{color:var(--textDim);opacity:.6}
 .send-btn:active:not(:disabled){transform:scale(.93)}
 .send-btn:disabled{opacity:.4;cursor:not-allowed}
 .send-btn svg{fill:#fff;width:18px;height:18px;margin-left:2px}
-.demo-banner{
-  background:linear-gradient(90deg,rgba(124,58,237,.15),rgba(201,168,76,.1));
-  border:1px solid rgba(124,58,237,.3);border-radius:8px;padding:10px 14px;
-  margin-bottom:8px;font-size:.75rem;color:var(--purpleL);display:flex;align-items:center;gap:8px;
-}
 
-/* ── MODAL ── */
+/* MODAL */
 .modal-overlay{
   display:none;position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.8);backdrop-filter:blur(6px);
+  background:rgba(0,0,0,.82);backdrop-filter:blur(6px);
   align-items:center;justify-content:center;padding:16px;
 }
 .modal-overlay.open{display:flex;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .modal{
-  width:100%;max-width:560px;max-height:85dvh;background:var(--s1);
+  width:100%;max-width:600px;max-height:88dvh;background:var(--s1);
   border:1px solid var(--border);border-radius:18px;overflow:hidden;
   display:flex;flex-direction:column;box-shadow:0 0 80px rgba(124,58,237,.2);
 }
-.modal-header{
-  padding:18px 22px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
-}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600}
-.modal-close{
-  width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--border);
-  color:var(--textDim);font-size:1rem;display:flex;align-items:center;justify-content:center;
-  transition:color .2s;line-height:1;
-}
+.modal-close{width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--border);color:var(--textDim);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:color .2s;line-height:1}
 .modal-close:hover{color:var(--text)}
-.modal-body{
-  flex:1;overflow-y:auto;padding:20px 22px;font-size:.84rem;line-height:1.75;color:#d4caed;
-}
-.modal-body h1{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:1em 0 .3em;font-size:1.2rem}
-.modal-body h2{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:.8em 0 .3em;font-size:1rem;border-bottom:1px solid var(--border);padding-bottom:.3em}
+.modal-body{flex:1;overflow-y:auto;padding:22px 24px;font-size:.84rem;line-height:1.8;color:#d4caed}
+.modal-body h1{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:1em 0 .4em;font-size:1.25rem}
+.modal-body h2{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:.9em 0 .3em;font-size:1rem;border-bottom:1px solid var(--border);padding-bottom:.3em}
 .modal-body strong{color:var(--purpleL)}
-.modal-body p{margin-bottom:.5em}
+.modal-body p{margin-bottom:.6em}
 
-/* ── ADMIN ── */
+/* ADMIN */
 #view-admin{background:var(--bg)}
-.admin-header{
-  padding:14px 20px;background:var(--s1);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
-}
+.admin-header{padding:13px 20px;background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .admin-brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;display:flex;align-items:center;gap:8px}
-.admin-badge{
-  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
-  background:var(--gold);color:#000;padding:2px 8px;border-radius:20px;
-  font-family:'Syne',sans-serif;font-weight:700;
-}
+.admin-badge{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:#000;padding:2px 8px;border-radius:20px;font-family:'Syne',sans-serif;font-weight:700}
 .admin-body{flex:1;display:flex;overflow:hidden}
-.client-list{
-  width:280px;flex-shrink:0;border-right:1px solid var(--border);
-  overflow-y:auto;background:var(--s1);
-}
-.list-header{
-  padding:14px 16px;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--textDim);border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
-}
+.client-list{width:280px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:var(--s1)}
+.list-header{padding:13px 16px;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--textDim);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .list-count{font-size:.7rem;color:var(--purpleL);font-weight:700}
-.client-item{
-  padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--border);
-  transition:background .15s;border-left:3px solid transparent;
-}
+.client-item{padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;border-left:3px solid transparent}
 .client-item:hover{background:var(--s2)}
 .client-item.active{background:var(--s2);border-left-color:var(--purple)}
-.client-item-name{font-size:.88rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:6px}
-.client-item-phone{font-size:.72rem;color:var(--textDim)}
-.client-item-date{font-size:.65rem;color:var(--goldD);margin-top:2px}
+.client-item-name{font-size:.86rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.client-item-phone{font-size:.7rem;color:var(--textDim)}
+.client-item-date{font-size:.63rem;color:var(--goldD);margin-top:2px}
 .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
 .status-done{background:var(--green)}
 .status-active{background:var(--purpleL)}
 .status-new{background:var(--textDim)}
 .client-detail{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.detail-empty{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:var(--textDim);gap:10px;
-}
-.detail-empty-icon{font-size:3rem;opacity:.2}
-.detail-empty-text{font-size:.8rem;letter-spacing:.08em}
-.detail-header{
-  padding:14px 18px;border-bottom:1px solid var(--border);background:var(--s1);
-  flex-shrink:0;display:flex;align-items:center;gap:12px;
-}
+.detail-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--textDim);gap:10px}
+.detail-empty-icon{font-size:3rem;opacity:.18}
+.detail-empty-text{font-size:.78rem;letter-spacing:.08em}
+.detail-header{padding:13px 18px;border-bottom:1px solid var(--border);background:var(--s1);flex-shrink:0;display:flex;align-items:center;gap:10px}
 .detail-info{flex:1;min-width:0}
-.detail-name{font-size:.92rem;font-weight:700}
-.detail-meta{font-size:.7rem;color:var(--textDim)}
+.detail-name{font-size:.9rem;font-weight:700}
+.detail-meta{font-size:.68rem;color:var(--textDim)}
 .detail-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--s1)}
-.tab{
-  flex:1;padding:11px;text-align:center;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
-  cursor:pointer;color:var(--textDim);border-bottom:2px solid transparent;transition:color .2s,border-color .2s;
-}
+.tab{flex:1;padding:11px;text-align:center;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:var(--textDim);border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
 .tab.active{color:var(--purpleL);border-bottom-color:var(--purple)}
 .detail-content{flex:1;overflow-y:auto;padding:16px 18px}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.info-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px}
-.info-card-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--textDim);margin-bottom:4px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.info-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:13px}
+.info-card-label{font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--textDim);margin-bottom:4px}
 .info-card-value{font-size:.82rem;font-weight:700}
-.pb-content{font-size:.83rem;line-height:1.75;color:#d4caed}
+.pb-content{font-size:.82rem;line-height:1.8;color:#d4caed}
 .pb-content h1{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:1em 0 .4em;font-size:1.2rem}
-.pb-content h2{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:.8em 0 .3em;font-size:.95rem;border-bottom:1px solid var(--border);padding-bottom:.25em}
+.pb-content h2{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:.8em 0 .3em;font-size:.93rem;border-bottom:1px solid var(--border);padding-bottom:.25em}
 .pb-content strong{color:var(--purpleL)}
 .pb-content p{margin-bottom:.5em}
 .chat-log{display:flex;flex-direction:column;gap:8px}
-.empty-state{color:var(--textDim);font-size:.8rem;text-align:center;padding:40px 0}
-.back-btn{background:none;border:none;color:var(--textDim);font-size:1.1rem;padding:4px 8px;border-radius:6px;transition:color .2s}
-.back-btn:hover{color:var(--text)}
+.empty-state{color:var(--textDim);font-size:.78rem;text-align:center;padding:48px 0}
+.mobile-only-back{background:none;border:none;color:var(--textDim);font-size:1.1rem;padding:4px 6px;border-radius:6px;transition:color .2s}
+.mobile-only-back:hover{color:var(--text)}
 
-/* error toast */
 #error-toast{
   display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);
   background:#3B0000;border:1px solid var(--error);border-radius:10px;
-  padding:10px 18px;font-size:.8rem;color:var(--error);z-index:1000;
+  padding:10px 18px;font-size:.78rem;color:var(--error);z-index:9000;
   max-width:90vw;text-align:center;gap:8px;align-items:center;
 }
 #error-toast.show{display:flex}
 #error-toast button{background:none;border:none;color:var(--error);font-size:1rem;cursor:pointer;line-height:1}
 
-/* responsive */
 @media(max-width:640px){
-  .client-list{width:100%;border-right:none}
   .client-list.mobile-hidden{display:none}
+  .client-list:not(.mobile-hidden){width:100%;border-right:none}
   .client-detail.mobile-hidden{display:none}
 }
 @media(min-width:641px){
-  .back-btn.mobile-only{display:none}
+  .mobile-only-back{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════ LOGIN ════════════════════════ -->
+<!-- LOGIN -->
 <div id="view-login" class="view">
   <div class="brand">Playbook<span>AI</span></div>
   <div class="tagline">Inteligência para o seu atendimento</div>
   <div class="card">
     <div class="card-title">Bem-vindo</div>
-    <div class="card-sub">Digite seu número de WhatsApp para continuar. Admins usam o código de acesso.</div>
-    <label for="login-phone">Número de WhatsApp ou código admin</label>
-    <input type="tel" id="login-phone" placeholder="Ex: 11999999999" maxlength="11"/>
+    <div class="card-sub">Digite seu número de WhatsApp para continuar.<br/>Administradores usam o código de acesso.</div>
+    <label for="login-phone">Número de WhatsApp</label>
+    <input type="tel" id="login-phone" placeholder="Ex: 11999999999" maxlength="11" autofocus/>
     <button class="btn" id="login-btn">Entrar</button>
-    <div class="demo-divider">
-      <div class="demo-label-row">Acessos de demonstração</div>
-      <div class="demo-row">
-        <div class="demo-chip" id="demo-client-chip">
-          <div class="demo-chip-label">Cliente</div>
-          <div class="demo-chip-value">Barbearia do Rex</div>
-        </div>
-        <div class="demo-chip" id="demo-admin-chip">
-          <div class="demo-chip-label">Admin</div>
-          <div class="demo-chip-value">Painel geral</div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
-<!-- ════════════════════════ REGISTER ════════════════════════ -->
+<!-- REGISTER -->
 <div id="view-register" class="view">
   <div class="brand">Playbook<span>AI</span></div>
   <div class="tagline">Primeiro acesso</div>
   <div class="card">
     <div class="card-title">Cadastre sua empresa</div>
-    <div class="card-sub">
-      WhatsApp: <strong id="reg-phone-display"></strong><br/>
-      Preencha os dados abaixo para começar.
-    </div>
+    <div class="card-sub">WhatsApp: <strong id="reg-phone-display"></strong><br/>Preencha os dados abaixo para começar.</div>
     <label for="reg-company">Nome da Empresa</label>
-    <input type="text" id="reg-company" placeholder="Ex: Padaria do João"/>
+    <input type="text" id="reg-company" placeholder="Ex: Agência Visão Digital"/>
     <label for="reg-cnpj">CNPJ</label>
     <input type="text" id="reg-cnpj" placeholder="00.000.000/0001-00" maxlength="18"/>
-    <button class="btn" id="reg-btn">Criar Conta</button>
+    <button class="btn" id="reg-btn">Criar Conta e Começar</button>
     <button class="btn btn-ghost" id="reg-back">← Voltar</button>
   </div>
 </div>
 
-<!-- ════════════════════════ CHAT ════════════════════════ -->
+<!-- CHAT -->
 <div id="view-chat" class="view">
   <div class="chat-header">
+    <button class="back-arrow" id="chat-back" title="Voltar ao início">&#8592;</button>
     <div class="avatar" id="chat-avatar">?</div>
     <div class="header-info">
       <div class="header-name" id="chat-company-name">Empresa</div>
@@ -333,20 +257,20 @@ input::placeholder{color:var(--textDim);opacity:.6}
   <div class="messages-area" id="messages-area"></div>
   <div class="input-bar">
     <textarea id="chat-textarea" rows="1" placeholder="Digite sua mensagem..."></textarea>
-    <button class="send-btn" id="send-btn">
+    <button class="send-btn" id="send-btn" title="Enviar">
       <svg viewBox="0 0 24 24"><path d="M2 21L23 12 2 3v7l15 2-15 2z"/></svg>
     </button>
   </div>
 </div>
 
-<!-- ════════════════════════ ADMIN ════════════════════════ -->
+<!-- ADMIN -->
 <div id="view-admin" class="view">
   <div class="admin-header">
     <div class="admin-brand">
       Playbook<span style="color:var(--gold);font-style:italic">AI</span>
       <span class="admin-badge">Admin</span>
     </div>
-    <button id="admin-logout" style="background:none;border:none;color:var(--textDim);font-size:.8rem">Sair</button>
+    <button id="admin-logout" style="background:none;border:none;color:var(--textDim);font-size:.78rem">Sair</button>
   </div>
   <div class="admin-body">
     <div class="client-list" id="client-list">
@@ -354,7 +278,7 @@ input::placeholder{color:var(--textDim);opacity:.6}
         <span>Clientes</span>
         <span class="list-count" id="client-count">0</span>
       </div>
-      <div id="client-list-items"></div>
+      <div id="client-list-items"><div class="empty-state">Carregando...</div></div>
     </div>
     <div class="client-detail" id="client-detail">
       <div class="detail-empty" id="detail-empty">
@@ -363,7 +287,7 @@ input::placeholder{color:var(--textDim);opacity:.6}
       </div>
       <div id="detail-panel" style="display:none;flex-direction:column;height:100%;overflow:hidden;flex:1">
         <div class="detail-header">
-          <button class="back-btn mobile-only" id="detail-back">←</button>
+          <button class="mobile-only-back" id="detail-back">&#8592;</button>
           <div class="avatar avatar-sm" id="detail-avatar">?</div>
           <div class="detail-info">
             <div class="detail-name" id="detail-name"></div>
@@ -381,7 +305,7 @@ input::placeholder{color:var(--textDim);opacity:.6}
   </div>
 </div>
 
-<!-- ════════════════════════ PLAYBOOK MODAL ════════════════════════ -->
+<!-- PLAYBOOK MODAL -->
 <div class="modal-overlay" id="playbook-modal">
   <div class="modal">
     <div class="modal-header">
@@ -392,199 +316,153 @@ input::placeholder{color:var(--textDim);opacity:.6}
   </div>
 </div>
 
-<!-- ════════════════════════ ERROR TOAST ════════════════════════ -->
+<!-- ERROR -->
 <div id="error-toast">
   <span id="error-text"></span>
   <button onclick="hideError()">✕</button>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════
 const CONFIG = {
   SUPABASE_URL: "https://bfnvkikuqdqsyypnrbnc.supabase.co",
   SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbnZraWt1cWRxc3l5cG5yYm5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNzMzOTIsImV4cCI6MjA4ODY0OTM5Mn0.F2bi2_fffuRTKBMy4bw0_MbaIVOXW0pycFntmUs28Gk",
   GEMINI_KEY:   "AIzaSyBe_Yd8WF0yPXeMtLmZbsh_o_JbwjM1doE",
   ADMIN_PHONE:  "00000000000",
-  CLIENT_PHONE: "11988887777",
 };
 
-// ══════════════════════════════════════════════
-// ESTADO
-// ══════════════════════════════════════════════
 let state = {
-  phone: "",
-  client: null,
-  messages: [],
-  playbook: null,
-  isDemo: false,
-  loading: false,
-  currentView: "login",
-  adminSelected: null,
-  adminMsgs: [],
-  adminPb: null,
-  adminTab: "info",
-  adminShowDetail: false,
-  adminClients: [],
+  phone:"",client:null,messages:[],playbook:null,loading:false,
+  adminSelected:null,adminMsgs:[],adminPb:null,
+  adminTab:"info",adminShowDetail:false,adminClients:[],
 };
 
-// ══════════════════════════════════════════════
-// DEMO DATA
-// ══════════════════════════════════════════════
-const DEMO_CLIENT = {
-  id:"demo-001", phone:CONFIG.CLIENT_PHONE,
-  company_name:"Barbearia do Rex", cnpj:"12.345.678/0001-99",
-  created_at:"2025-01-15T10:30:00Z"
-};
-const DEMO_CLIENT_2 = {
-  id:"demo-002", phone:"21977776666",
-  company_name:"Studio Beleza Vida", cnpj:"98.765.432/0001-11",
-  created_at:"2025-02-03T14:00:00Z"
-};
-const DEMO_MESSAGES = [
-  {role:"assistant",content:"Olá! Vou te ajudar a criar o playbook de atendimento da Barbearia do Rex. O que sua empresa faz e qual é o produto ou serviço principal?",created_at:"2025-01-15T10:31:00Z"},
-  {role:"user",content:"Somos uma barbearia premium no centro de São Paulo. Fazemos corte masculino, barba, sobrancelha e tratamentos capilares.",created_at:"2025-01-15T10:32:00Z"},
-  {role:"assistant",content:"Ótimo! Quem é o seu cliente ideal — perfil, faixa etária e qual é a principal dor que ele chega até você?",created_at:"2025-01-15T10:32:30Z"},
-  {role:"user",content:"Homens entre 25 e 45 anos, executivos e profissionais liberais. A dor principal é não ter tempo e querer um serviço de qualidade sem filas.",created_at:"2025-01-15T10:34:00Z"},
-  {role:"assistant",content:"Entendido. Como funciona o processo de atendimento do início ao fim — do contato até o pós-serviço?",created_at:"2025-01-15T10:34:20Z"},
-  {role:"user",content:"Cliente marca pelo WhatsApp ou app, chega e é recebido com café ou whisky, o barbeiro já sabe o histórico dele. Após o serviço enviamos uma mensagem de satisfação.",created_at:"2025-01-15T10:36:00Z"},
-  {role:"assistant",content:"Que experiência diferenciada! Quais são as principais dúvidas ou objeções que os clientes costumam ter?",created_at:"2025-01-15T10:36:20Z"},
-  {role:"user",content:'Preço é a principal — acham que é caro. Também perguntam muito sobre horários e se precisam agendar com antecedência.',created_at:"2025-01-15T10:38:00Z"},
-  {role:"assistant",content:"Perfeito. E qual é o grande diferencial da Barbearia do Rex em relação à concorrência?",created_at:"2025-01-15T10:38:20Z"},
-  {role:"user",content:"Experiência completa. Não é só corte, é um momento de cuidado masculino. Ambiente exclusivo, barbeiros especializados, produtos importados e histórico completo do cliente.",created_at:"2025-01-15T10:40:00Z"},
-  {role:"assistant",content:'Com base em tudo que você me contou, já tenho o suficiente para criar seu playbook. Clique em "Ver Playbook" acima para conferir!',created_at:"2025-01-15T10:40:30Z"},
-];
-const DEMO_MESSAGES_2 = [
-  {role:"assistant",content:"Olá! Vou te ajudar a criar o playbook de atendimento do Studio Beleza Vida. O que sua empresa faz e qual é o produto ou serviço principal?",created_at:"2025-02-03T14:01:00Z"},
-  {role:"user",content:"Somos um studio de beleza feminino. Fazemos cabelo, manicure, design de sobrancelha e maquiagem para noivas.",created_at:"2025-02-03T14:02:30Z"},
-  {role:"assistant",content:"Ótimo! Quem é a sua cliente ideal e qual é a principal dor que ela chega até você?",created_at:"2025-02-03T14:02:50Z"},
-];
-const DEMO_PLAYBOOK = {
-  content:`# Playbook de Atendimento — Barbearia do Rex
-
-## Sobre a Empresa
-A Barbearia do Rex é uma barbearia premium localizada no centro de São Paulo, especializada em cortes masculinos, barba, sobrancelha e tratamentos capilares. O foco é oferecer uma experiência completa de cuidado masculino em um ambiente exclusivo.
-
-## Público-Alvo
-Homens entre 25 e 45 anos, majoritariamente executivos e profissionais liberais com alta demanda de tempo. A principal dor é a falta de tempo aliada ao desejo por um serviço de qualidade sem espera. Valorizam exclusividade, pontualidade e ambiente sofisticado.
-
-## Processo de Atendimento
-
-1. **Primeiro contato:** Cliente agenda via WhatsApp ou aplicativo próprio
-2. **Confirmação:** Envio automático de confirmação com horário e nome do barbeiro
-3. **Recepção:** Cliente é recebido com café ou whisky — sem fila, sem espera
-4. **Atendimento:** Barbeiro acessa histórico completo (estilo preferido, produtos usados, últimas visitas)
-5. **Pós-serviço:** Mensagem de satisfação enviada até 2 horas após o atendimento
-
-## Objeções Frequentes e Respostas
-
-**"Está caro":** Aqui você não paga só pelo corte — paga pela experiência, pelo barbeiro que conhece seu estilo, pelo ambiente e pelo seu tempo. Clientes que vieram de barbearias comuns nunca voltaram atrás.
-
-**"Preciso agendar com antecedência?":** Recomendamos agendar, mas temos horários para encaixes. O agendamento garante que seu barbeiro favorito esteja disponível para você.
-
-**"Quais formas de pagamento?":** Aceitamos Pix, cartão de débito e crédito, e também temos planos mensais com desconto para clientes fixos.
-
-## Diferenciais
-Experiência completa de cuidado masculino — não é apenas um corte, é um ritual. Ambiente exclusivo com produtos importados, barbeiros especializados, histórico individualizado do cliente e atendimento sem filas com hora marcada.
-
-## Scripts de Atendimento
-
-**Abordagem inicial:**
-Olá! Aqui é a Barbearia do Rex. Vi que você entrou em contato — posso te ajudar a agendar um horário? Temos disponibilidade hoje e amanhã com nossos barbeiros.
-
-**Quando o cliente pergunta o preço:**
-Nosso corte começa em R$ 80 e inclui a experiência completa: recepção, histórico do seu estilo, produtos premium e pós-atendimento. Muitos clientes nos contam que é o melhor investimento semanal que fazem. Posso reservar um horário para você conhecer pessoalmente?
-
-**Fechamento:**
-Ótimo! Vou confirmar: [dia] às [horário] com [barbeiro]. Você receberá uma confirmação aqui no WhatsApp. Caso precise reagendar, nos avise com pelo menos 2 horas de antecedência. Até lá!`,
-  created_at:"2025-01-15T10:41:00Z"
-};
-
-// ══════════════════════════════════════════════
-// DB
-// ══════════════════════════════════════════════
-async function db(path, opts={}) {
-  const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${path}`, {
+/* ── SUPABASE ── */
+async function db(path,opts={}){
+  const res=await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${path}`,{
     ...opts,
     headers:{
-      apikey: CONFIG.SUPABASE_KEY,
+      apikey:CONFIG.SUPABASE_KEY,
       Authorization:`Bearer ${CONFIG.SUPABASE_KEY}`,
       "Content-Type":"application/json",
       Prefer:"return=representation",
       ...(opts.headers||{})
     }
   });
-  const t = await res.text();
-  if (!res.ok) throw new Error(t);
-  return t ? JSON.parse(t) : null;
+  const t=await res.text();
+  if(!res.ok)throw new Error(t);
+  return t?JSON.parse(t):null;
 }
-const getClient    = p => db(`clients?phone=eq.${encodeURIComponent(p)}&select=*`).then(d=>d?.[0]??null);
+const getClient    = p   => db(`clients?phone=eq.${encodeURIComponent(p)}&select=*`).then(d=>d?.[0]??null);
 const createClient = (p,n,c) => db("clients",{method:"POST",body:JSON.stringify({phone:p,company_name:n,cnpj:c})});
-const getMessages  = p => db(`messages?client_phone=eq.${encodeURIComponent(p)}&order=created_at.asc&select=*`);
+const getMessages  = p   => db(`messages?client_phone=eq.${encodeURIComponent(p)}&order=created_at.asc&select=*`);
 const saveMsg      = (cp,r,c) => db("messages",{method:"POST",body:JSON.stringify({client_phone:cp,role:r,content:c})});
-const savePlaybook = (cp,c) => db("playbooks",{method:"POST",body:JSON.stringify({client_phone:cp,content:c})});
-const getAllClients = () => db("clients?select=*&order=created_at.desc");
-const getPlaybook  = p => db(`playbooks?client_phone=eq.${encodeURIComponent(p)}&order=created_at.desc&limit=1`).then(d=>d?.[0]??null);
+const savePlaybook = (cp,c)   => db("playbooks",{method:"POST",body:JSON.stringify({client_phone:cp,content:c})});
+const getAllClients = ()  => db("clients?select=*&order=created_at.desc");
+const getPlaybook  = p   => db(`playbooks?client_phone=eq.${encodeURIComponent(p)}&order=created_at.desc&limit=1`).then(d=>d?.[0]??null);
 
-// ══════════════════════════════════════════════
-// GEMINI
-// ══════════════════════════════════════════════
-const SYSTEM_PROMPT = `Você é um especialista em criar playbooks de atendimento para empresas brasileiras via WhatsApp.
+/* ── GEMINI ── */
+const SYSTEM_PROMPT=`Você é um especialista em inteligência comercial e atendimento via WhatsApp. Sua missão é entrevistar o dono de uma empresa e coletar informações completas para criar um playbook de atendimento e treinamento de IA.
 
-REGRAS ABSOLUTAS:
-- MÁXIMO 2 frases por resposta. Seja direto e objetivo.
-- Faça apenas UMA pergunta por vez.
-- Sem emojis. Sem listas. Só texto corrido.
-- Quando tiver informações suficientes (mínimo 5 trocas), gere o playbook completo.
+REGRAS DE COMUNICAÇÃO:
+- Máximo 2 frases por resposta. Seja direto, nunca prolixo.
+- Uma pergunta por vez, nunca agrupe perguntas.
+- Zero emojis. Zero listas. Só texto corrido.
+- Confirme brevemente o que ouviu antes de perguntar o próximo ponto.
+- Quando tiver coberto todas as áreas obrigatórias, gere o playbook.
 
-FLUXO DE PERGUNTAS:
-1) O que sua empresa faz e qual o produto/serviço principal?
-2) Quem é seu cliente ideal — perfil, faixa etária, dor principal?
-3) Como funciona o processo de venda ou atendimento do início ao fim?
-4) Quais são as principais dúvidas ou objeções dos clientes?
-5) Qual é o grande diferencial da sua empresa em relação à concorrência?
+ÁREAS OBRIGATÓRIAS A COBRIR (siga esta ordem, adapte conforme respostas):
 
-QUANDO GERAR O PLAYBOOK:
-Após coletar informações suficientes, escreva exatamente neste formato:
+1. PRODUTOS E EMPRESAS
+   - Quantas empresas ou marcas operam nesse WhatsApp?
+   - Todos os produtos e serviços oferecidos com preços.
+   - Produto principal (maior volume).
+
+2. PROCESSO DE VENDAS
+   - Jornada completa do primeiro contato até o pagamento.
+   - O processo é 100% interno ou depende de sistema ou aprovação externa?
+   - Se há etapa externa: qual é, como funciona e quanto tempo adiciona?
+   - Tempo médio do primeiro contato ao fechamento.
+
+3. CANAIS E TRÁFEGO
+   - Canais de entrada do cliente (WhatsApp direto, Instagram, site, indicação, anúncio).
+   - Investe em tráfego pago? Em quais plataformas?
+   - Canal que gera mais volume hoje.
+   - Existe script ou funil de vendas estruturado atualmente?
+
+4. PERFIL DO CLIENTE IDEAL
+   - Quem compra mais: perfil, faixa etária, comportamento.
+   - Dor principal que leva ao contato.
+   - Pesquisa concorrentes antes de comprar?
+
+5. OBJEÇÕES E PERDAS
+   - Principais objeções que travam a venda.
+   - O que faz o cliente sumir no meio da conversa sem comprar.
+   - Objeção que a equipe ainda não sabe responder bem.
+   - Principal reclamação ou dúvida no pós-venda.
+
+6. DIFERENCIAIS
+   - Maior diferencial frente à concorrência.
+   - Por que escolher essa empresa e não outra.
+   - Garantias, bônus ou algo exclusivo que a empresa oferece.
+
+QUANDO GERAR O PLAYBOOK, escreva exatamente neste formato (nada antes ou depois das tags):
 
 [PLAYBOOK_START]
 # Playbook de Atendimento — [Nome da Empresa]
 
-## Sobre a Empresa
-[descrição]
+## Visão Geral do Negócio
+[Empresas, produtos, modelo de operação]
 
-## Público-Alvo
-[perfil do cliente ideal]
+## Produtos e Preços
+[Lista completa produto — valor]
 
-## Processo de Atendimento
-[passo a passo]
+## Processo de Vendas
+[Passo a passo do primeiro contato ao fechamento, incluindo etapas externas se houver]
 
-## Objeções Frequentes e Respostas
-**[objeção 1]:** [resposta]
-**[objeção 2]:** [resposta]
+## Canais de Aquisição
+[Canais de entrada, tráfego pago, funil atual]
 
-## Diferenciais
-[diferenciais]
+## Perfil do Cliente Ideal
+[Quem é, dor principal, comportamento]
+
+## Objeções e Respostas Modelo
+**[Objeção 1]:** [Resposta]
+**[Objeção 2]:** [Resposta]
+**[Objeção 3]:** [Resposta]
+
+## Por Que o Cliente Some Sem Comprar
+[Gatilhos de abandono e como contornar]
+
+## Diferenciais Competitivos
+[Diferenciais, garantias, bônus]
 
 ## Scripts de Atendimento
 
-**Abordagem inicial:**
-[script]
+**Primeiro contato — cliente veio de anúncio:**
+[Script]
 
-**Quando o cliente pergunta o preço:**
-[script]
+**Primeiro contato — cliente veio por indicação:**
+[Script]
+
+**Quando pede o preço:**
+[Script]
+
+**Quando diz "vou pensar":**
+[Script]
+
+**Follow-up para quem sumiu:**
+[Script]
 
 **Fechamento:**
-[script]
+[Script]
 [PLAYBOOK_END]`;
 
-async function callGemini(history) {
-  const contents = history.map(m=>({
-    role: m.role==="assistant"?"model":"user",
+async function callGemini(history){
+  const contents=history.map(m=>({
+    role:m.role==="assistant"?"model":"user",
     parts:[{text:m.content}]
   }));
-  const res = await fetch(
+  const res=await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${CONFIG.GEMINI_KEY}`,
     {
       method:"POST",
@@ -592,18 +470,16 @@ async function callGemini(history) {
       body:JSON.stringify({
         system_instruction:{parts:[{text:SYSTEM_PROMPT}]},
         contents,
-        generationConfig:{maxOutputTokens:2048,temperature:0.7}
+        generationConfig:{maxOutputTokens:4096,temperature:0.65}
       })
     }
   );
-  const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "Erro ao processar.";
+  const data=await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text??"Erro ao processar a resposta.";
 }
 
-// ══════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════
-function formatCNPJ(v) {
+/* ── UTILS ── */
+function formatCNPJ(v){
   return v.replace(/\D/g,"")
     .replace(/^(\d{2})(\d)/,"$1.$2")
     .replace(/^(\d{2})\.(\d{3})(\d)/,"$1.$2.$3")
@@ -611,12 +487,10 @@ function formatCNPJ(v) {
     .replace(/(\d{4})(\d)/,"$1-$2")
     .slice(0,18);
 }
-function formatPhone(v) { return v.replace(/\D/g,"").slice(0,11); }
-function timeLabel(iso) {
-  if (!iso) return "";
-  return new Date(iso).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-}
-function renderMarkdown(text) {
+function formatPhone(v){return v.replace(/\D/g,"").slice(0,11);}
+function timeLabel(iso){if(!iso)return"";return new Date(iso).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}
+function escHtml(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br/>");}
+function renderMarkdown(text){
   return text
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
     .replace(/^# (.+)$/gm,"<h1>$1</h1>")
@@ -625,413 +499,285 @@ function renderMarkdown(text) {
     .replace(/\n\n/g,"</p><p>")
     .replace(/\n/g,"<br/>");
 }
-function showError(msg) {
-  document.getElementById("error-text").textContent = msg;
+function showError(msg){
+  document.getElementById("error-text").textContent=msg;
   document.getElementById("error-toast").classList.add("show");
-  setTimeout(hideError, 5000);
+  setTimeout(hideError,6000);
 }
-function hideError() { document.getElementById("error-toast").classList.remove("show"); }
+function hideError(){document.getElementById("error-toast").classList.remove("show");}
 
-// ══════════════════════════════════════════════
-// VIEW ROUTER
-// ══════════════════════════════════════════════
-function showView(name) {
+/* ── ROUTER ── */
+function showView(name){
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.getElementById("view-"+name).classList.add("active");
-  state.currentView = name;
 }
 
-// ══════════════════════════════════════════════
-// CHAT RENDERING
-// ══════════════════════════════════════════════
-function makeBubble(msg) {
-  const row = document.createElement("div");
-  row.className = `msg-row ${msg.role}`;
-  row.innerHTML = `
-    <div class="bubble ${msg.role}">
-      ${escHtml(msg.content)}
-      <div class="bubble-time">${timeLabel(msg.created_at)}</div>
-    </div>`;
+/* ── CHAT UI ── */
+function makeBubble(msg){
+  const row=document.createElement("div");
+  row.className=`msg-row ${msg.role}`;
+  row.innerHTML=`<div class="bubble ${msg.role}">${escHtml(msg.content)}<div class="bubble-time">${timeLabel(msg.created_at)}</div></div>`;
   return row;
 }
-function escHtml(t) {
-  return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br/>");
-}
-function makeTyping() {
-  const row = document.createElement("div");
-  row.className = "msg-row assistant";
-  row.id = "typing-bubble";
-  row.innerHTML = `<div class="bubble assistant"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+function makeTyping(){
+  const row=document.createElement("div");
+  row.className="msg-row assistant";row.id="typing-bubble";
+  row.innerHTML=`<div class="bubble assistant"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
   return row;
 }
-function renderMessages() {
-  const area = document.getElementById("messages-area");
-  area.innerHTML = "";
-  if (state.isDemo) {
-    const banner = document.createElement("div");
-    banner.className = "demo-banner";
-    banner.innerHTML = "<span>◈</span><span>Perfil de demonstração — Barbearia do Rex. Continue a conversa normalmente ou veja o playbook gerado.</span>";
-    area.appendChild(banner);
-  }
-  state.messages.forEach(m => area.appendChild(makeBubble(m)));
+function renderMessages(){
+  const area=document.getElementById("messages-area");
+  area.innerHTML="";
+  state.messages.forEach(m=>area.appendChild(makeBubble(m)));
   scrollToBottom();
 }
-function appendMessage(msg) {
-  const area = document.getElementById("messages-area");
-  area.appendChild(makeBubble(msg));
-  scrollToBottom();
-}
-function showTyping() {
-  const area = document.getElementById("messages-area");
-  area.appendChild(makeTyping());
-  scrollToBottom();
-}
-function removeTyping() {
-  document.getElementById("typing-bubble")?.remove();
-}
-function scrollToBottom() {
-  const area = document.getElementById("messages-area");
-  area.scrollTop = area.scrollHeight;
-}
-function updateChatHeader() {
-  const c = state.client;
-  document.getElementById("chat-company-name").textContent = c?.company_name || "Empresa";
-  document.getElementById("chat-avatar").textContent = (c?.company_name||"?")[0].toUpperCase();
-  const pb = document.getElementById("chat-playbook-btn");
-  pb.style.display = state.playbook ? "block" : "none";
+function appendMessage(msg){document.getElementById("messages-area").appendChild(makeBubble(msg));scrollToBottom();}
+function showTyping(){document.getElementById("messages-area").appendChild(makeTyping());scrollToBottom();}
+function removeTyping(){document.getElementById("typing-bubble")?.remove();}
+function scrollToBottom(){const a=document.getElementById("messages-area");a.scrollTop=a.scrollHeight;}
+function updateChatHeader(){
+  const c=state.client;
+  document.getElementById("chat-company-name").textContent=c?.company_name||"Empresa";
+  document.getElementById("chat-avatar").textContent=(c?.company_name||"?")[0].toUpperCase();
+  document.getElementById("chat-playbook-btn").style.display=state.playbook?"block":"none";
 }
 
-// ══════════════════════════════════════════════
-// LOGIN
-// ══════════════════════════════════════════════
-async function handleLogin(ph) {
-  if (!ph) return;
+/* ── LOGIN ── */
+async function handleLogin(ph){
+  if(!ph)return;
   setLoading(true);
-  try {
-    if (ph === CONFIG.ADMIN_PHONE) {
-      setLoading(false);
-      loadAdminView();
-      return;
-    }
-    state.phone = ph;
-    if (ph === CONFIG.CLIENT_PHONE) {
-      state.client = DEMO_CLIENT;
-      state.messages = [...DEMO_MESSAGES];
-      state.playbook = DEMO_PLAYBOOK;
-      state.isDemo = true;
-      renderMessages();
-      updateChatHeader();
-      showView("chat");
-      setLoading(false);
-      return;
-    }
-    const existing = await getClient(ph);
-    if (existing) {
-      state.client = existing;
-      const [ms, pb] = await Promise.all([getMessages(ph), getPlaybook(ph)]);
-      state.messages = ms||[];
-      state.playbook = pb;
-      state.isDemo = false;
-      if (!ms||ms.length===0) await sendWelcome(ph);
-      renderMessages();
-      updateChatHeader();
-      showView("chat");
+  try{
+    if(ph===CONFIG.ADMIN_PHONE){setLoading(false);await loadAdminView();return;}
+    state.phone=ph;
+    const existing=await getClient(ph);
+    if(existing){
+      state.client=existing;
+      const[ms,pb]=await Promise.all([getMessages(ph),getPlaybook(ph)]);
+      state.messages=ms||[];state.playbook=pb;
+      if(!ms||ms.length===0)await sendWelcome(ph);
+      renderMessages();updateChatHeader();showView("chat");
     } else {
-      document.getElementById("reg-phone-display").textContent = ph;
+      document.getElementById("reg-phone-display").textContent=ph;
       showView("register");
     }
-  } catch(e) {
-    showError("Erro de conexão. Verifique as credenciais do Supabase.");
-  }
+  }catch(e){showError("Erro de conexão. Verifique sua internet ou as credenciais.");}
   setLoading(false);
 }
 
-// ══════════════════════════════════════════════
-// REGISTER
-// ══════════════════════════════════════════════
-async function handleRegister() {
-  const company = document.getElementById("reg-company").value.trim();
-  const cnpj    = document.getElementById("reg-cnpj").value.trim();
-  if (!company||!cnpj) return;
+/* ── REGISTER ── */
+async function handleRegister(){
+  const company=document.getElementById("reg-company").value.trim();
+  const cnpj=document.getElementById("reg-cnpj").value.trim();
+  if(!company||!cnpj)return;
   setLoading(true);
-  try {
-    await createClient(state.phone, company, cnpj);
-    const c = await getClient(state.phone);
-    state.client = c;
-    state.messages = [];
-    state.isDemo = false;
+  try{
+    await createClient(state.phone,company,cnpj);
+    const c=await getClient(state.phone);
+    state.client=c;state.messages=[];
     await sendWelcome(state.phone);
-    renderMessages();
-    updateChatHeader();
-    showView("chat");
-  } catch(e) {
-    showError("Erro ao cadastrar. Tente novamente.");
-  }
+    renderMessages();updateChatHeader();showView("chat");
+  }catch(e){showError("Erro ao cadastrar. Tente novamente.");}
   setLoading(false);
 }
 
-async function sendWelcome(ph) {
-  const txt = "Olá! Vou te ajudar a criar o playbook de atendimento da sua empresa. O que sua empresa faz e qual é o produto ou serviço principal?";
-  const m = {role:"assistant",content:txt,created_at:new Date().toISOString()};
+async function sendWelcome(ph){
+  const txt="Olá! Vou te ajudar a criar o playbook completo de atendimento e vendas da sua empresa. Para começar: quantas empresas ou marcas você opera nesse mesmo WhatsApp?";
+  const m={role:"assistant",content:txt,created_at:new Date().toISOString()};
   state.messages.push(m);
   await saveMsg(ph,"assistant",txt);
 }
 
-// ══════════════════════════════════════════════
-// SEND MESSAGE
-// ══════════════════════════════════════════════
-async function handleSend() {
-  const ta = document.getElementById("chat-textarea");
-  const text = ta.value.trim();
-  if (!text||state.loading) return;
-  ta.value = ""; ta.style.height="42px";
-
-  const userMsg = {role:"user",content:text,created_at:new Date().toISOString()};
-  state.messages.push(userMsg);
-  appendMessage(userMsg);
-  state.loading = true;
-  updateSendBtn();
-  showTyping();
-
-  try {
-    if (!state.isDemo) await saveMsg(state.phone,"user",text);
-    const response = await callGemini(state.messages);
+/* ── SEND ── */
+async function handleSend(){
+  const ta=document.getElementById("chat-textarea");
+  const text=ta.value.trim();
+  if(!text||state.loading)return;
+  ta.value="";ta.style.height="42px";
+  const userMsg={role:"user",content:text,created_at:new Date().toISOString()};
+  state.messages.push(userMsg);appendMessage(userMsg);
+  state.loading=true;updateSendBtn();showTyping();
+  try{
+    await saveMsg(state.phone,"user",text);
+    const response=await callGemini(state.messages);
     removeTyping();
-
-    if (response.includes("[PLAYBOOK_START]")&&response.includes("[PLAYBOOK_END]")) {
-      const pbContent = (response.match(/\[PLAYBOOK_START\]([\s\S]*?)\[PLAYBOOK_END\]/)||[])[1]?.trim()||"";
-      const pre = response.split("[PLAYBOOK_START]")[0].trim();
-      const aiText = pre||"Pronto! Seu playbook foi criado com base em tudo que você me contou.";
-      const aiMsg = {role:"assistant",content:aiText,created_at:new Date().toISOString()};
-      state.messages.push(aiMsg);
-      appendMessage(aiMsg);
-      if (!state.isDemo) await saveMsg(state.phone,"assistant",aiText);
-      if (pbContent) {
-        if (!state.isDemo) await savePlaybook(state.phone,pbContent);
-        state.playbook = {content:pbContent};
-        updateChatHeader();
-      }
+    if(response.includes("[PLAYBOOK_START]")&&response.includes("[PLAYBOOK_END]")){
+      const pbContent=(response.match(/\[PLAYBOOK_START\]([\s\S]*?)\[PLAYBOOK_END\]/)||[])[1]?.trim()||"";
+      const pre=response.split("[PLAYBOOK_START]")[0].trim();
+      const aiText=pre||"Perfeito! Criei o playbook completo da sua empresa. Clique em 'Ver Playbook' para conferir.";
+      const aiMsg={role:"assistant",content:aiText,created_at:new Date().toISOString()};
+      state.messages.push(aiMsg);appendMessage(aiMsg);
+      await saveMsg(state.phone,"assistant",aiText);
+      if(pbContent){await savePlaybook(state.phone,pbContent);state.playbook={content:pbContent};updateChatHeader();}
     } else {
-      const aiMsg = {role:"assistant",content:response,created_at:new Date().toISOString()};
-      state.messages.push(aiMsg);
-      appendMessage(aiMsg);
-      if (!state.isDemo) await saveMsg(state.phone,"assistant",response);
+      const aiMsg={role:"assistant",content:response,created_at:new Date().toISOString()};
+      state.messages.push(aiMsg);appendMessage(aiMsg);
+      await saveMsg(state.phone,"assistant",response);
     }
-  } catch(e) {
+  }catch(e){
     removeTyping();
-    const errMsg = {role:"assistant",content:"Erro ao processar. Tente novamente.",created_at:new Date().toISOString()};
-    state.messages.push(errMsg);
-    appendMessage(errMsg);
+    const errMsg={role:"assistant",content:"Ocorreu um erro. Tente novamente.",created_at:new Date().toISOString()};
+    state.messages.push(errMsg);appendMessage(errMsg);
   }
-  state.loading = false;
-  updateSendBtn();
-  ta.focus();
+  state.loading=false;updateSendBtn();ta.focus();
 }
+function updateSendBtn(){document.getElementById("send-btn").disabled=state.loading;}
 
-function updateSendBtn() {
-  document.getElementById("send-btn").disabled = state.loading;
-}
-
-// ══════════════════════════════════════════════
-// ADMIN
-// ══════════════════════════════════════════════
-async function loadAdminView() {
+/* ── ADMIN ── */
+async function loadAdminView(){
   showView("admin");
-  state.adminClients = [DEMO_CLIENT, DEMO_CLIENT_2];
-  state.adminShowDetail = false;
-  renderClientList();
-  try {
-    const real = await getAllClients();
-    if (real&&real.length>0) {
-      const demoPhones = [DEMO_CLIENT.phone,DEMO_CLIENT_2.phone];
-      const extras = real.filter(c=>!demoPhones.includes(c.phone));
-      state.adminClients = [DEMO_CLIENT,DEMO_CLIENT_2,...extras];
-      renderClientList();
-    }
-  } catch(e) { /* use demo data */ }
+  state.adminShowDetail=false;state.adminClients=[];
+  document.getElementById("client-list-items").innerHTML=`<div class="empty-state">Carregando...</div>`;
+  try{
+    const real=await getAllClients();
+    state.adminClients=real||[];
+    renderClientList();
+  }catch(e){
+    document.getElementById("client-list-items").innerHTML=`<div class="empty-state">Erro ao carregar clientes.</div>`;
+    showError("Não foi possível carregar os clientes.");
+  }
 }
 
-function renderClientList() {
-  const container = document.getElementById("client-list-items");
-  document.getElementById("client-count").textContent = state.adminClients.length;
-  container.innerHTML = "";
+function renderClientList(){
+  const container=document.getElementById("client-list-items");
+  document.getElementById("client-count").textContent=state.adminClients.length;
+  if(!state.adminClients.length){
+    container.innerHTML=`<div class="empty-state">Nenhum cliente cadastrado ainda.</div>`;return;
+  }
+  container.innerHTML="";
   state.adminClients.forEach(c=>{
-    const st = c.phone===DEMO_CLIENT.phone?"done":c.phone===DEMO_CLIENT_2.phone?"active":"new";
-    const el = document.createElement("div");
-    el.className = `client-item${state.adminSelected?.phone===c.phone?" active":""}`;
-    el.innerHTML = `
-      <div class="client-item-name"><span class="status-dot status-${st}"></span>${escHtml(c.company_name)}</div>
+    const el=document.createElement("div");
+    el.className=`client-item${state.adminSelected?.phone===c.phone?" active":""}`;
+    el.innerHTML=`
+      <div class="client-item-name"><span class="status-dot status-new" id="dot-${c.phone}"></span>${escHtml(c.company_name)}</div>
       <div class="client-item-phone">${c.phone}</div>
       <div class="client-item-date">${new Date(c.created_at).toLocaleDateString("pt-BR")}</div>`;
-    el.onclick = ()=>selectClient(c);
+    el.onclick=()=>selectClient(c);
     container.appendChild(el);
+  });
+  state.adminClients.forEach(async c=>{
+    try{
+      const pb=await getPlaybook(c.phone);
+      const dot=document.getElementById(`dot-${c.phone}`);
+      if(!dot)return;
+      if(pb){dot.className="status-dot status-done";}
+      else{const ms=await getMessages(c.phone);if(ms&&ms.length>0)dot.className="status-dot status-active";}
+    }catch(e){}
   });
 }
 
-async function selectClient(c) {
-  state.adminSelected = c;
-  state.adminTab = "info";
-  state.adminShowDetail = true;
-  applyMobileLayout();
-  renderClientList();
-
-  if (c.phone===DEMO_CLIENT.phone) {
-    state.adminMsgs = DEMO_MESSAGES;
-    state.adminPb = DEMO_PLAYBOOK;
-  } else if (c.phone===DEMO_CLIENT_2.phone) {
-    state.adminMsgs = DEMO_MESSAGES_2;
-    state.adminPb = null;
-  } else {
-    state.adminMsgs = [];
-    state.adminPb = null;
-    const [m,p] = await Promise.all([getMessages(c.phone),getPlaybook(c.phone)]);
-    state.adminMsgs = m||[];
-    state.adminPb = p;
-  }
-
-  // show detail panel
+async function selectClient(c){
+  state.adminSelected=c;state.adminTab="info";state.adminShowDetail=true;
+  applyMobileLayout();renderClientList();
+  state.adminMsgs=[];state.adminPb=null;
+  try{
+    const[m,p]=await Promise.all([getMessages(c.phone),getPlaybook(c.phone)]);
+    state.adminMsgs=m||[];state.adminPb=p;
+  }catch(e){showError("Erro ao carregar dados do cliente.");}
   document.getElementById("detail-empty").style.display="none";
-  const panel = document.getElementById("detail-panel");
+  const panel=document.getElementById("detail-panel");
   panel.style.display="flex";
-
-  // header
-  document.getElementById("detail-avatar").textContent = c.company_name[0].toUpperCase();
-  document.getElementById("detail-name").textContent = c.company_name;
-  document.getElementById("detail-meta").textContent = `${c.phone} · ${c.cnpj}`;
-
+  document.getElementById("detail-avatar").textContent=c.company_name[0].toUpperCase();
+  document.getElementById("detail-name").textContent=c.company_name;
+  document.getElementById("detail-meta").textContent=`${c.phone} · ${c.cnpj}`;
   renderDetailContent();
 }
 
-function renderDetailContent() {
-  // tab highlight
-  document.querySelectorAll(".detail-tabs .tab").forEach(t=>{
-    t.classList.toggle("active", t.dataset.tab===state.adminTab);
-  });
-  const content = document.getElementById("detail-content");
-  const c = state.adminSelected;
-  const pb = state.adminPb;
-  const msgs = state.adminMsgs;
-  const isDemo = c.phone===DEMO_CLIENT.phone||c.phone===DEMO_CLIENT_2.phone;
-
-  if (state.adminTab==="info") {
-    const statusColor = pb?"var(--green)":msgs.length>0?"var(--purpleL)":"var(--textDim)";
-    const statusText  = pb?"✓ Playbook gerado":msgs.length>0?"Em conversa...":"Ainda não iniciou";
-    content.innerHTML = `
-      ${isDemo?`<div class="demo-banner" style="margin-bottom:16px"><span>◈</span><span>Perfil de demonstração</span></div>`:""}
+function renderDetailContent(){
+  document.querySelectorAll(".detail-tabs .tab").forEach(t=>{t.classList.toggle("active",t.dataset.tab===state.adminTab);});
+  const content=document.getElementById("detail-content");
+  const c=state.adminSelected,pb=state.adminPb,msgs=state.adminMsgs;
+  if(state.adminTab==="info"){
+    const sc=pb?"var(--green)":msgs.length>0?"var(--purpleL)":"var(--textDim)";
+    const st=pb?"✓ Playbook gerado":msgs.length>0?"Em conversa...":"Ainda não iniciou";
+    content.innerHTML=`
       <div class="info-grid">
         <div class="info-card"><div class="info-card-label">Empresa</div><div class="info-card-value">${escHtml(c.company_name)}</div></div>
         <div class="info-card"><div class="info-card-label">Telefone</div><div class="info-card-value">${c.phone}</div></div>
-        <div class="info-card"><div class="info-card-label">CNPJ</div><div class="info-card-value">${escHtml(c.cnpj)}</div></div>
+        <div class="info-card"><div class="info-card-label">CNPJ</div><div class="info-card-value" style="font-size:.74rem">${escHtml(c.cnpj)}</div></div>
         <div class="info-card"><div class="info-card-label">Cadastro</div><div class="info-card-value">${new Date(c.created_at).toLocaleDateString("pt-BR")}</div></div>
       </div>
       <div class="info-card" style="border-color:${pb?"rgba(52,211,153,.3)":"var(--border)"}">
         <div class="info-card-label">Status</div>
-        <div class="info-card-value" style="font-size:.85rem;color:${statusColor}">${statusText}</div>
+        <div class="info-card-value" style="font-size:.82rem;color:${sc}">${st}</div>
       </div>`;
-  } else if (state.adminTab==="chat") {
-    if (!msgs.length) { content.innerHTML=`<div class="empty-state">Sem mensagens ainda.</div>`; return; }
-    content.innerHTML = `<div class="chat-log"></div>`;
-    const log = content.querySelector(".chat-log");
+  } else if(state.adminTab==="chat"){
+    if(!msgs.length){content.innerHTML=`<div class="empty-state">Nenhuma mensagem ainda.</div>`;return;}
+    content.innerHTML=`<div class="chat-log"></div>`;
+    const log=content.querySelector(".chat-log");
     msgs.forEach(m=>{
-      const row = document.createElement("div");
+      const row=document.createElement("div");
       row.className=`msg-row ${m.role}`;
       row.innerHTML=`<div class="bubble ${m.role}">${escHtml(m.content)}<div class="bubble-time">${timeLabel(m.created_at)}</div></div>`;
       log.appendChild(row);
     });
   } else {
-    if (!pb) { content.innerHTML=`<div class="empty-state">Playbook ainda não gerado.</div>`; return; }
+    if(!pb){content.innerHTML=`<div class="empty-state">Playbook ainda não gerado.</div>`;return;}
     content.innerHTML=`<div class="pb-content"><p>${renderMarkdown(pb.content)}</p></div>`;
   }
 }
 
-function applyMobileLayout() {
-  const list = document.getElementById("client-list");
-  const detail = document.getElementById("client-detail");
-  if (window.innerWidth<=640) {
-    list.classList.toggle("mobile-hidden", state.adminShowDetail);
-    detail.classList.toggle("mobile-hidden", !state.adminShowDetail);
-  } else {
-    list.classList.remove("mobile-hidden");
-    detail.classList.remove("mobile-hidden");
-  }
+function applyMobileLayout(){
+  const list=document.getElementById("client-list"),detail=document.getElementById("client-detail");
+  if(window.innerWidth<=640){
+    if(state.adminShowDetail){list.classList.add("mobile-hidden");detail.classList.remove("mobile-hidden");}
+    else{list.classList.remove("mobile-hidden");detail.classList.add("mobile-hidden");}
+  } else {list.classList.remove("mobile-hidden");detail.classList.remove("mobile-hidden");}
 }
 
-// ══════════════════════════════════════════════
-// LOADING STATE
-// ══════════════════════════════════════════════
-function setLoading(v) {
-  state.loading = v;
-  document.getElementById("login-btn").disabled = v;
-  document.getElementById("login-btn").textContent = v?"Verificando...":"Entrar";
-  document.getElementById("reg-btn").disabled = v;
-  document.getElementById("reg-btn").textContent = v?"Cadastrando...":"Criar Conta";
+function setLoading(v){
+  state.loading=v;
+  const lb=document.getElementById("login-btn");lb.disabled=v;lb.textContent=v?"Verificando...":"Entrar";
+  const rb=document.getElementById("reg-btn");rb.disabled=v;rb.textContent=v?"Cadastrando...":"Criar Conta e Começar";
 }
 
-// ══════════════════════════════════════════════
-// EVENT LISTENERS
-// ══════════════════════════════════════════════
-document.addEventListener("DOMContentLoaded", ()=>{
+/* ── INIT ── */
+document.addEventListener("DOMContentLoaded",()=>{
   showView("login");
 
-  // Login
-  const loginPhone = document.getElementById("login-phone");
-  loginPhone.addEventListener("input", e=>{ e.target.value = formatPhone(e.target.value); });
-  loginPhone.addEventListener("keydown", e=>{ if(e.key==="Enter") handleLogin(loginPhone.value.trim()); });
-  document.getElementById("login-btn").addEventListener("click", ()=>handleLogin(loginPhone.value.trim()));
+  const lp=document.getElementById("login-phone");
+  lp.addEventListener("input",e=>{e.target.value=formatPhone(e.target.value);});
+  lp.addEventListener("keydown",e=>{if(e.key==="Enter")handleLogin(lp.value.trim());});
+  document.getElementById("login-btn").addEventListener("click",()=>handleLogin(lp.value.trim()));
 
-  // Demo chips
-  document.getElementById("demo-client-chip").addEventListener("click", ()=>handleLogin(CONFIG.CLIENT_PHONE));
-  document.getElementById("demo-admin-chip").addEventListener("click",  ()=>handleLogin(CONFIG.ADMIN_PHONE));
+  document.getElementById("reg-cnpj").addEventListener("input",e=>{e.target.value=formatCNPJ(e.target.value);});
+  document.getElementById("reg-btn").addEventListener("click",handleRegister);
+  document.getElementById("reg-back").addEventListener("click",()=>showView("login"));
 
-  // Register
-  const regCnpj = document.getElementById("reg-cnpj");
-  regCnpj.addEventListener("input", e=>{ e.target.value = formatCNPJ(e.target.value); });
-  document.getElementById("reg-btn").addEventListener("click", handleRegister);
-  document.getElementById("reg-back").addEventListener("click", ()=>showView("login"));
-
-  // Chat textarea auto-resize
-  const ta = document.getElementById("chat-textarea");
-  ta.addEventListener("input", ()=>{
-    ta.style.height="42px";
-    ta.style.height = Math.min(ta.scrollHeight,100)+"px";
+  /* BACK button in chat */
+  document.getElementById("chat-back").addEventListener("click",()=>{
+    state.messages=[];state.client=null;state.playbook=null;state.phone="";
+    document.getElementById("messages-area").innerHTML="";
+    document.getElementById("login-phone").value="";
+    document.getElementById("reg-company").value="";
+    document.getElementById("reg-cnpj").value="";
+    showView("login");
   });
-  ta.addEventListener("keydown", e=>{
-    if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();handleSend();}
-  });
-  document.getElementById("send-btn").addEventListener("click", handleSend);
 
-  // Playbook modal
-  document.getElementById("chat-playbook-btn").addEventListener("click", ()=>{
-    if (!state.playbook) return;
-    document.getElementById("modal-body").innerHTML = `<p>${renderMarkdown(state.playbook.content)}</p>`;
+  const ta=document.getElementById("chat-textarea");
+  ta.addEventListener("input",()=>{ta.style.height="42px";ta.style.height=Math.min(ta.scrollHeight,100)+"px";});
+  ta.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();handleSend();}});
+  document.getElementById("send-btn").addEventListener("click",handleSend);
+
+  document.getElementById("chat-playbook-btn").addEventListener("click",()=>{
+    if(!state.playbook)return;
+    document.getElementById("modal-body").innerHTML=`<p>${renderMarkdown(state.playbook.content)}</p>`;
     document.getElementById("playbook-modal").classList.add("open");
   });
-  document.getElementById("modal-close").addEventListener("click", ()=>{
-    document.getElementById("playbook-modal").classList.remove("open");
-  });
-  document.getElementById("playbook-modal").addEventListener("click", e=>{
-    if (e.target===e.currentTarget) document.getElementById("playbook-modal").classList.remove("open");
-  });
+  document.getElementById("modal-close").addEventListener("click",()=>document.getElementById("playbook-modal").classList.remove("open"));
+  document.getElementById("playbook-modal").addEventListener("click",e=>{if(e.target===e.currentTarget)document.getElementById("playbook-modal").classList.remove("open");});
 
-  // Admin
-  document.getElementById("admin-logout").addEventListener("click", ()=>showView("login"));
-  document.getElementById("detail-back").addEventListener("click", ()=>{
-    state.adminShowDetail = false;
-    state.adminSelected = null;
-    applyMobileLayout();
+  document.getElementById("admin-logout").addEventListener("click",()=>{state.adminClients=[];state.adminSelected=null;showView("login");});
+  document.getElementById("detail-back").addEventListener("click",()=>{
+    state.adminShowDetail=false;state.adminSelected=null;applyMobileLayout();
     document.getElementById("detail-empty").style.display="flex";
     document.getElementById("detail-panel").style.display="none";
     renderClientList();
   });
-
   document.querySelectorAll(".detail-tabs .tab").forEach(t=>{
-    t.addEventListener("click", ()=>{
-      state.adminTab = t.dataset.tab;
-      renderDetailContent();
-    });
+    t.addEventListener("click",()=>{state.adminTab=t.dataset.tab;renderDetailContent();});
   });
 
-  window.addEventListener("resize", applyMobileLayout);
+  window.addEventListener("resize",applyMobileLayout);
 });
 </script>
 </body>
