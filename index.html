@@ -1,1066 +1,1038 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtus - Gestão de Obras</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    animation: { 'spin-slow': 'spin 3s linear infinite' }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>PlaybookAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Syne:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080F;--s1:#0D0D1C;--s2:#121228;--s3:#1A1A35;
+  --purple:#7C3AED;--purpleL:#A78BFA;--purpleD:#4C1D95;
+  --gold:#C9A84C;--goldD:#8B6E2E;
+  --text:#EDE9FE;--textDim:#7C6FA0;--border:#2A2050;
+  --userBub:#5B21B6;--aiBub:#13132A;--error:#F87171;--green:#34D399;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+button{font-family:'Syne',sans-serif;cursor:pointer}
+input,textarea{font-family:'Syne',sans-serif}
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+/* grain */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+}
 
-    <style>
-        /* Animações Customizadas baseadas no Tailwind-animate do React */
-        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
-        .animate-zoom-in { animation: zoomIn 0.3s ease-out; }
-        .animate-slide-in-top { animation: slideInTop 0.3s ease-out; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes slideInTop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+/* ── VIEWS ── */
+.view{display:none;height:100dvh}
+.view.active{display:flex;flex-direction:column}
 
-        /* Estilização Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* Ocultar elementos para lógica de abas */
-        .hidden-view { display: none !important; }
-    </style>
+/* ── AUTH ── */
+#view-login,#view-register{
+  align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,#2D1060 0%,transparent 70%),
+             radial-gradient(ellipse 60% 40% at 100% 100%,#1A0A40 0%,transparent 60%),var(--bg);
+}
+.brand{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,3rem);font-weight:400;letter-spacing:.08em;margin-bottom:4px;text-align:center}
+.brand span{color:var(--gold);font-style:italic}
+.tagline{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--textDim);margin-bottom:40px;text-align:center}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:400px;box-shadow:0 0 60px rgba(124,58,237,.1),0 2px 4px rgba(0,0,0,.5)}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;margin-bottom:6px}
+.card-sub{font-size:.78rem;color:var(--textDim);margin-bottom:24px;line-height:1.6}
+.card-sub strong{color:var(--purpleL)}
+label{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--textDim);margin-bottom:6px}
+input[type=tel],input[type=text]{
+  width:100%;padding:12px 14px;background:var(--s2);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-size:.9rem;outline:none;
+  transition:border .2s,box-shadow .2s;margin-bottom:16px;display:block;
+}
+input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+input::placeholder{color:var(--textDim);opacity:.6}
+.btn{
+  display:block;width:100%;padding:13px;background:var(--purple);border:none;border-radius:10px;
+  color:#fff;font-size:.88rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  transition:background .2s,transform .1s,box-shadow .2s;box-shadow:0 0 20px rgba(124,58,237,.3);
+}
+.btn:hover:not(:disabled){background:#6D28D9;box-shadow:0 0 30px rgba(124,58,237,.5)}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--textDim);box-shadow:none;margin-top:10px}
+.btn-ghost:hover:not(:disabled){background:var(--s2);box-shadow:none;color:var(--text);border-color:var(--purple)}
+.demo-divider{margin-top:24px;border-top:1px solid var(--border);padding-top:20px}
+.demo-label-row{font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--textDim);margin-bottom:12px;text-align:center}
+.demo-row{display:flex;gap:8px}
+.demo-chip{
+  flex:1;padding:9px 10px;border-radius:8px;border:1px dashed var(--border);
+  background:var(--s2);cursor:pointer;text-align:center;
+  transition:border-color .2s,background .2s;
+}
+.demo-chip:hover{border-color:var(--purple);background:var(--s3)}
+.demo-chip-label{font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--textDim);margin-bottom:3px}
+.demo-chip-value{font-size:.78rem;font-weight:700;color:var(--purpleL)}
+
+/* ── CHAT ── */
+#view-chat{background:var(--bg)}
+.chat-header{
+  padding:14px 18px;background:var(--s1);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.4);flex-shrink:0;
+}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),var(--purpleD));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff;flex-shrink:0;
+  box-shadow:0 0 12px rgba(124,58,237,.4);
+}
+.avatar-sm{width:36px;height:36px;font-size:.9rem}
+.header-info{flex:1;min-width:0}
+.header-name{font-size:.9rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-status{font-size:.7rem;color:var(--gold);letter-spacing:.08em}
+.playbook-btn{
+  padding:6px 12px;border-radius:8px;background:transparent;border:1px solid var(--gold);
+  color:var(--gold);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  transition:background .2s;
+}
+.playbook-btn:hover{background:rgba(201,168,76,.12)}
+.messages-area{
+  flex:1;overflow-y:auto;padding:16px 12px;
+  display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth;
+}
+.msg-row{display:flex}
+.msg-row.user{justify-content:flex-end}
+.msg-row.assistant{justify-content:flex-start}
+.bubble{
+  max-width:min(72%,320px);padding:10px 14px;border-radius:18px;
+  font-size:.88rem;line-height:1.55;word-break:break-word;
+}
+.bubble.user{background:var(--userBub);border-bottom-right-radius:4px;box-shadow:0 2px 8px rgba(91,33,182,.3)}
+.bubble.assistant{background:var(--aiBub);border:1px solid var(--border);border-bottom-left-radius:4px}
+.bubble-time{font-size:.62rem;color:rgba(255,255,255,.35);text-align:right;margin-top:4px}
+.typing-dots{display:flex;gap:4px;padding:4px 0;align-items:center}
+.typing-dots span{
+  width:7px;height:7px;border-radius:50%;background:var(--purple);
+  animation:blink 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.input-bar{
+  padding:10px 12px;background:var(--s1);border-top:1px solid var(--border);
+  display:flex;gap:8px;align-items:flex-end;flex-shrink:0;
+}
+#chat-textarea{
+  flex:1;padding:10px 14px;background:var(--s2);border:1px solid var(--border);
+  border-radius:22px;color:var(--text);font-size:.88rem;outline:none;
+  resize:none;max-height:100px;overflow-y:auto;transition:border .2s;line-height:1.4;min-height:42px;
+}
+#chat-textarea:focus{border-color:var(--purple)}
+#chat-textarea::placeholder{color:var(--textDim);opacity:.6}
+.send-btn{
+  width:42px;height:42px;border-radius:50%;background:var(--purple);border:none;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .2s,transform .1s;box-shadow:0 0 14px rgba(124,58,237,.4);
+}
+.send-btn:hover:not(:disabled){background:#6D28D9}
+.send-btn:active:not(:disabled){transform:scale(.93)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed}
+.send-btn svg{fill:#fff;width:18px;height:18px;margin-left:2px}
+.demo-banner{
+  background:linear-gradient(90deg,rgba(124,58,237,.15),rgba(201,168,76,.1));
+  border:1px solid rgba(124,58,237,.3);border-radius:8px;padding:10px 14px;
+  margin-bottom:8px;font-size:.75rem;color:var(--purpleL);display:flex;align-items:center;gap:8px;
+}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:16px;
+}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  width:100%;max-width:560px;max-height:85dvh;background:var(--s1);
+  border:1px solid var(--border);border-radius:18px;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:0 0 80px rgba(124,58,237,.2);
+}
+.modal-header{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600}
+.modal-close{
+  width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--border);
+  color:var(--textDim);font-size:1rem;display:flex;align-items:center;justify-content:center;
+  transition:color .2s;line-height:1;
+}
+.modal-close:hover{color:var(--text)}
+.modal-body{
+  flex:1;overflow-y:auto;padding:20px 22px;font-size:.84rem;line-height:1.75;color:#d4caed;
+}
+.modal-body h1{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:1em 0 .3em;font-size:1.2rem}
+.modal-body h2{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:.8em 0 .3em;font-size:1rem;border-bottom:1px solid var(--border);padding-bottom:.3em}
+.modal-body strong{color:var(--purpleL)}
+.modal-body p{margin-bottom:.5em}
+
+/* ── ADMIN ── */
+#view-admin{background:var(--bg)}
+.admin-header{
+  padding:14px 20px;background:var(--s1);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.admin-brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;display:flex;align-items:center;gap:8px}
+.admin-badge{
+  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
+  background:var(--gold);color:#000;padding:2px 8px;border-radius:20px;
+  font-family:'Syne',sans-serif;font-weight:700;
+}
+.admin-body{flex:1;display:flex;overflow:hidden}
+.client-list{
+  width:280px;flex-shrink:0;border-right:1px solid var(--border);
+  overflow-y:auto;background:var(--s1);
+}
+.list-header{
+  padding:14px 16px;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--textDim);border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.list-count{font-size:.7rem;color:var(--purpleL);font-weight:700}
+.client-item{
+  padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--border);
+  transition:background .15s;border-left:3px solid transparent;
+}
+.client-item:hover{background:var(--s2)}
+.client-item.active{background:var(--s2);border-left-color:var(--purple)}
+.client-item-name{font-size:.88rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.client-item-phone{font-size:.72rem;color:var(--textDim)}
+.client-item-date{font-size:.65rem;color:var(--goldD);margin-top:2px}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
+.status-done{background:var(--green)}
+.status-active{background:var(--purpleL)}
+.status-new{background:var(--textDim)}
+.client-detail{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.detail-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--textDim);gap:10px;
+}
+.detail-empty-icon{font-size:3rem;opacity:.2}
+.detail-empty-text{font-size:.8rem;letter-spacing:.08em}
+.detail-header{
+  padding:14px 18px;border-bottom:1px solid var(--border);background:var(--s1);
+  flex-shrink:0;display:flex;align-items:center;gap:12px;
+}
+.detail-info{flex:1;min-width:0}
+.detail-name{font-size:.92rem;font-weight:700}
+.detail-meta{font-size:.7rem;color:var(--textDim)}
+.detail-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--s1)}
+.tab{
+  flex:1;padding:11px;text-align:center;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;color:var(--textDim);border-bottom:2px solid transparent;transition:color .2s,border-color .2s;
+}
+.tab.active{color:var(--purpleL);border-bottom-color:var(--purple)}
+.detail-content{flex:1;overflow-y:auto;padding:16px 18px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.info-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.info-card-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--textDim);margin-bottom:4px}
+.info-card-value{font-size:.82rem;font-weight:700}
+.pb-content{font-size:.83rem;line-height:1.75;color:#d4caed}
+.pb-content h1{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:1em 0 .4em;font-size:1.2rem}
+.pb-content h2{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:.8em 0 .3em;font-size:.95rem;border-bottom:1px solid var(--border);padding-bottom:.25em}
+.pb-content strong{color:var(--purpleL)}
+.pb-content p{margin-bottom:.5em}
+.chat-log{display:flex;flex-direction:column;gap:8px}
+.empty-state{color:var(--textDim);font-size:.8rem;text-align:center;padding:40px 0}
+.back-btn{background:none;border:none;color:var(--textDim);font-size:1.1rem;padding:4px 8px;border-radius:6px;transition:color .2s}
+.back-btn:hover{color:var(--text)}
+
+/* error toast */
+#error-toast{
+  display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  background:#3B0000;border:1px solid var(--error);border-radius:10px;
+  padding:10px 18px;font-size:.8rem;color:var(--error);z-index:1000;
+  max-width:90vw;text-align:center;gap:8px;align-items:center;
+}
+#error-toast.show{display:flex}
+#error-toast button{background:none;border:none;color:var(--error);font-size:1rem;cursor:pointer;line-height:1}
+
+/* responsive */
+@media(max-width:640px){
+  .client-list{width:100%;border-right:none}
+  .client-list.mobile-hidden{display:none}
+  .client-detail.mobile-hidden{display:none}
+}
+@media(min-width:641px){
+  .back-btn.mobile-only{display:none}
+}
+</style>
 </head>
-<body class="bg-[#F5F5F7] font-sans text-slate-800 overflow-hidden h-screen flex">
-
-    <div id="root" class="w-full h-full flex"></div>
-
-    <script>
-        // --- DADOS SIMULADOS (MOCK DATA) ---
-        const PHASES = [
-            "Doc pessoais", "Análise de crédito", "Entrevista com gerente", "Contratos Virtus",
-            "Alteração CAD. Imob", "Projetos e RRT", "Alvará de construção", "Taxa de engenharia",
-            "Avaliação da engenharia", "Assinatura do contrato de financiamento", "Guias de ITBI",
-            "ITBI", "Registro do contrato", "Liberação de Terreno", "Liberação de custas cartorárias",
-            "CNO", "SCPO", "Medição 30%", "Aferição", "Medição de 60%", "Habite-se",
-            "CND RFB", "Averbação", "Medição 100%", "Liberação de 5%"
-        ];
-
-        const ROLES = ['CEO', 'Financeiro', 'Arquiteto', 'Marketing', 'Atendente', 'Cliente'];
-        const TEAM_USERS = ['Ana (Arquiteta)', 'Carlos (Financeiro)', 'Mariana (Marketing)', 'João (CEO)', 'Pedro (Atendente)'];
-
-        // --- ESTADO GLOBAL DA APLICAÇÃO ---
-        const state = {
-            isAuthenticated: false,
-            currentRole: 'CEO',
-            currentView: 'dashboard',
-            notificationsOpen: false,
-            
-            clients: [
-                { id: 1, nome: 'João da Silva', telefone: '(11) 99999-9999', endereco: 'Rua das Flores, 123', phaseIndex: 8, comments: ['Fundações concluídas com sucesso.'] }
-            ],
-            financeEntries: [
-                { id: 1, desc: 'Sinal - João da Silva', tipo: 'Entrada', valor: 45000, imposto: 2700, vencimento: '2026-02-10', status: 'Pago' },
-                { id: 2, desc: 'Concreto Usinado', tipo: 'Saída', valor: 12300, imposto: 0, vencimento: '2026-02-20', status: 'Em Atraso' },
-                { id: 3, desc: 'Folha de Pagamento - Equipe 1', tipo: 'Funcionário', valor: 8000, imposto: 0, vencimento: '2026-02-28', status: 'Pendente' },
-            ],
-            tasks: [
-                { id: 't1', title: 'Aprovar projeto elétrico', column: 'todo', role: 'Arquiteto', days: 2, clientId: 1, assignees: ['Ana (Arquiteta)'], comments: [{ author: 'CEO', text: 'Prioridade alta neste projeto.', date: 'Hoje, 09:00' }] },
-                { id: 't2', title: 'Pagamento fornecedor Cimento', column: 'in_progress', role: 'Financeiro', days: 5, clientId: 'internal', assignees: ['Carlos (Financeiro)'], comments: [] },
-                { id: 't3', title: 'Campanha Instagram Mês 05', column: 'review', role: 'Marketing', days: 12, clientId: 'internal', assignees: [], comments: [] },
-                { id: 't4', title: 'Assinatura Contrato', column: 'done', role: 'Atendente', days: 1, clientId: 1, assignees: ['Pedro (Atendente)'], comments: [] }
-            ],
-            notes: [
-                { id: 1, date: '2026-02-18', text: 'Revisar contratos da obra 12 com o departamento jurídico.' },
-                { id: 2, date: '2026-02-20', text: 'Cobrar equipe de marketing sobre a campanha de maio.' }
-            ],
-            events: [
-                { id: 1, title: 'Reunião Cliente Alpha', date: '2026-02-25', time: '10:00', assignee: 'João (CEO)', type: 'emerald' }
-            ],
-
-            // Estados de Interface (UI)
-            draggedTaskId: null,
-            selectedTask: null,
-            isNewTaskModalOpen: false,
-            newTaskAssignees: [],
-            newTaskRole: 'Arquiteto',
-            
-            isFinanceModalOpen: false,
-            financeFilter: 'Todos',
-            newFinanceTipo: 'Entrada',
-
-            isEventModalOpen: false,
-            
-            portalClientId: 1,
-            activeObraClient: null,
-            hasDependentesForm: false
-        };
-
-        // --- SISTEMA DE RENDERIZAÇÃO E ROTAS ---
-        function getNavItems() {
-            const items = [];
-            if (state.currentRole !== 'Cliente') {
-                items.push({ id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' });
-                items.push({ id: 'kanban', icon: 'kanban-square', label: 'Kanban Demandas' });
-                items.push({ id: 'obras', icon: 'layout-dashboard', label: 'Acompanhamento de Obras' });
-            }
-            if (state.currentRole === 'CEO' || state.currentRole === 'Financeiro') {
-                items.push({ id: 'finance', icon: 'wallet', label: 'Financeiro' });
-            }
-            if (state.currentRole === 'CEO') {
-                items.push({ id: 'agenda', icon: 'calendar-days', label: 'Agenda & Notas' });
-            }
-            if (state.currentRole === 'Atendente' || state.currentRole === 'CEO') {
-                items.push({ id: 'new_client', icon: 'user-plus', label: 'Cadastro Cliente' });
-            }
-            if (state.currentRole === 'Cliente' || state.currentRole === 'CEO') {
-                items.push({ id: 'portal', icon: 'file-text', label: 'Portal do Cliente' });
-            }
-            return items;
-        }
-
-        function formatCurrency(val) {
-            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
-        }
-
-        // --- FUNÇÕES DE AÇÃO GLOBAIS (window) ---
-        window.login = (e) => {
-            e.preventDefault();
-            state.currentRole = document.getElementById('loginRole').value;
-            state.isAuthenticated = true;
-            
-            const nav = getNavItems();
-            if(!nav.find(i => i.id === state.currentView)) state.currentView = nav[0].id;
-            
-            render();
-        };
-
-        window.logout = () => {
-            state.isAuthenticated = false;
-            render();
-        };
-
-        window.changeRole = (newRole) => {
-            state.currentRole = newRole;
-            const nav = getNavItems();
-            if(!nav.find(i => i.id === state.currentView)) state.currentView = nav[0].id;
-            render();
-        };
-
-        window.changeView = (viewId) => {
-            state.currentView = viewId;
-            render();
-        };
-
-        window.toggleNotifications = () => {
-            state.notificationsOpen = !state.notificationsOpen;
-            render();
-        };
-
-        // KANBAN ACTIONS
-        window.dragStart = (e, id) => {
-            state.draggedTaskId = id;
-            e.dataTransfer.effectAllowed = "move";
-            setTimeout(() => e.target.style.opacity = "0.5", 0);
-        };
-        window.dragEnd = (e) => {
-            e.target.style.opacity = "1";
-            state.draggedTaskId = null;
-        };
-        window.dragOver = (e) => e.preventDefault();
-        window.drop = (e, columnId) => {
-            e.preventDefault();
-            if (state.draggedTaskId) {
-                const task = state.tasks.find(t => t.id === state.draggedTaskId);
-                if (task) task.column = columnId;
-                render();
-            }
-        };
-        window.openTask = (id) => {
-            state.selectedTask = state.tasks.find(t => t.id === id);
-            render();
-        };
-        window.closeTask = () => {
-            state.selectedTask = null;
-            render();
-        };
-        window.toggleNewTaskModal = (isOpen) => {
-            state.isNewTaskModalOpen = isOpen;
-            if(!isOpen) state.newTaskAssignees = [];
-            render();
-        };
-        window.addTaskAssignee = (val) => {
-            if(val && !state.newTaskAssignees.includes(val)) state.newTaskAssignees.push(val);
-            render();
-        };
-        window.removeTaskAssignee = (val) => {
-            state.newTaskAssignees = state.newTaskAssignees.filter(a => a !== val);
-            render();
-        };
-        window.handleCreateTask = (e) => {
-            e.preventDefault();
-            const title = document.getElementById('newTaskTitle').value;
-            const role = document.getElementById('newTaskRole').value;
-            const days = document.getElementById('newTaskDays').value;
-            
-            state.tasks.push({
-                id: Date.now().toString(),
-                title: title, column: 'todo', role: role, days: Number(days),
-                clientId: 'internal', assignees: [...state.newTaskAssignees], comments: []
-            });
-            window.toggleNewTaskModal(false);
-        };
-        window.updateTaskDays = (days) => {
-            if(state.selectedTask) state.selectedTask.days = Number(days);
-        };
-        window.updateTaskClient = (clientId) => {
-            if(state.selectedTask) state.selectedTask.clientId = clientId === 'internal' ? 'internal' : Number(clientId);
-        };
-        window.addTaskAssigneeExisting = (val) => {
-            if(val && state.selectedTask && !(state.selectedTask.assignees || []).includes(val)) {
-                state.selectedTask.assignees = state.selectedTask.assignees || [];
-                state.selectedTask.assignees.push(val);
-                render();
-            }
-        };
-        window.removeTaskAssigneeExisting = (val) => {
-            if(state.selectedTask) {
-                state.selectedTask.assignees = state.selectedTask.assignees.filter(a => a !== val);
-                render();
-            }
-        };
-        window.addComment = (e) => {
-            e.preventDefault();
-            const input = document.getElementById('taskCommentInput');
-            if(!input.value) return;
-            state.selectedTask.comments = state.selectedTask.comments || [];
-            state.selectedTask.comments.push({ 
-                author: state.currentRole, text: input.value, 
-                date: new Date().toLocaleString('pt-BR', { hour: '2-digit', minute:'2-digit', day:'2-digit', month:'2-digit' }) 
-            });
-            input.value = '';
-            render();
-        };
-
-        // FINANCE ACTIONS
-        window.setFinanceFilter = (filter) => {
-            state.financeFilter = filter;
-            render();
-        };
-        window.toggleFinanceModal = (isOpen) => {
-            state.isFinanceModalOpen = isOpen;
-            if(isOpen) state.newFinanceTipo = 'Entrada';
-            render();
-        };
-        window.setFinanceTipo = (tipo) => {
-            state.newFinanceTipo = tipo;
-            render();
-        };
-        window.handleAddEntry = (e) => {
-            e.preventDefault();
-            const desc = document.getElementById('finDesc').value;
-            const valor = document.getElementById('finValor').value;
-            const venc = document.getElementById('finVenc').value;
-            const status = document.getElementById('finStatus').value;
-            const impostoInput = document.getElementById('finImposto');
-            const imposto = state.newFinanceTipo === 'Entrada' && impostoInput ? Number(impostoInput.value) : 0;
-
-            state.financeEntries.push({
-                id: Date.now(), desc: desc, tipo: state.newFinanceTipo, valor: Number(valor), imposto: imposto, vencimento: venc, status: status
-            });
-            window.toggleFinanceModal(false);
-        };
-
-        // AGENDA ACTIONS
-        window.toggleEventModal = (isOpen) => {
-            state.isEventModalOpen = isOpen;
-            render();
-        };
-        window.addNote = (e) => {
-            e.preventDefault();
-            const input = document.getElementById('newNoteInput');
-            if(!input.value.trim()) return;
-            state.notes.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: input.value });
-            render();
-        };
-        window.addEvent = (e) => {
-            e.preventDefault();
-            state.events.push({
-                id: Date.now(), type: 'blue',
-                title: document.getElementById('evTitle').value,
-                date: document.getElementById('evDate').value,
-                time: document.getElementById('evTime').value,
-                assignee: document.getElementById('evAssignee').value
-            });
-            window.toggleEventModal(false);
-        };
-
-        // CLIENT FORM ACTIONS
-        window.toggleDependentes = (isChecked) => {
-            state.hasDependentesForm = isChecked;
-            render(); // Redraws to show/hide the fields
-        };
-        window.handleGeneratePDF = (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnGerarPdf');
-            btn.innerHTML = '<i data-lucide="clock" class="animate-spin inline mr-2"></i> Processando PDF...';
-            btn.classList.add('opacity-70', 'cursor-not-allowed');
-            lucide.createIcons();
-
-            const nome = document.getElementById('cliNome').value;
-            const tel = document.getElementById('cliTel').value;
-            const end = document.getElementById('cliEnd').value;
-            const ocu = document.getElementById('cliOcu').value;
-            const sal = document.getElementById('cliSal').value;
-            const tipoRenda = document.getElementById('cliTipoRenda').value;
-            
-            let depHtml = 'Cliente não possui dependentes.';
-            if(state.hasDependentesForm) {
-                const depNome = document.getElementById('cliDepNome').value;
-                const depPar = document.getElementById('cliDepPar').value;
-                depHtml = `Dependente: ${depNome} (${depPar})`;
-            }
-
-            const printContent = `
-            <html>
-                <head><title>Ficha_Cliente_${nome.replace(/\s+/g, '_')}</title><style>body { font-family: Arial, sans-serif; padding: 40px; color: #333; } .header { border-bottom: 2px solid #10b981; padding-bottom: 20px; margin-bottom: 30px; } h1 { color: #10b981; margin: 0; } .section { margin-bottom: 25px; } h2 { color: #333; font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; } .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; } .label { font-weight: bold; color: #666; font-size: 11px; text-transform: uppercase; } .value { font-size: 14px; margin-top: 4px; }</style></head>
-                <body>
-                <div class="header"><h1>Ficha de Cadastro - Virtus</h1><p style="color: #666; font-size: 14px;">Data de Emissão: ${new Date().toLocaleDateString()}</p></div>
-                <div class="section"><h2>1. Dados Pessoais</h2><div class="grid"><div><div class="label">Nome Completo</div><div class="value">${nome}</div></div><div><div class="label">Telefone / WhatsApp</div><div class="value">${tel}</div></div><div style="grid-column: 1 / -1;"><div class="label">Endereço</div><div class="value">${end}</div></div></div></div>
-                <div class="section"><h2>2. Perfil Financeiro</h2><div class="grid"><div><div class="label">Ocupação Principal</div><div class="value">${ocu || 'Não informado'}</div></div><div><div class="label">Renda Mensal</div><div class="value">${sal || 'Não informado'}</div></div><div><div class="label">Tipo de Renda</div><div class="value">${tipoRenda}</div></div></div></div>
-                <div class="section"><h2>3. Composição Familiar</h2><div class="value">${depHtml}</div></div>
-                <div style="margin-top: 50px; text-align: center; color: #999; font-size: 12px;">Este documento foi gerado digitalmente pelo Sistema Virtus.</div>
-                </body>
-            </html>
-            `;
-
-            state.clients.push({ id: Date.now(), nome: nome, telefone: tel, endereco: end, phaseIndex: 0, comments: ['Cadastro inicial recebido, documentação em análise.'] });
-
-            setTimeout(() => {
-                const printWindow = window.open('', '', 'width=800,height=600');
-                if(printWindow) { printWindow.document.write(printContent); printWindow.document.close(); printWindow.focus(); printWindow.print(); }
-                // Reset form
-                state.hasDependentesForm = false;
-                render();
-            }, 800);
-        };
-
-        // PORTAL & OBRAS ACTIONS
-        window.setPortalClient = (id) => { state.portalClientId = Number(id); render(); };
-        window.updateObraPhase = (id, phaseIdx) => {
-            const client = state.clients.find(c => c.id === id);
-            if(client) client.phaseIndex = parseInt(phaseIdx);
-            render();
-        };
-        window.toggleActiveObra = (id) => {
-            state.activeObraClient = state.activeObraClient === id ? null : id;
-            render();
-        };
-        window.addObraComment = (e, id) => {
-            e.preventDefault();
-            const input = document.getElementById('obraComment_' + id);
-            if(!input.value) return;
-            const client = state.clients.find(c => c.id === id);
-            client.comments = client.comments || [];
-            client.comments.push(input.value);
-            state.activeObraClient = null;
-            render();
-        };
-
-        // --- RENDERIZADORES DE VIEWS ---
-
-        function renderLogin() {
-            return `
-            <div class="w-full min-h-screen bg-slate-50 flex items-center justify-center relative overflow-hidden">
-                <div class="absolute -top-40 -right-40 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl"></div>
-                <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"></div>
-                
-                <div class="w-full max-w-md bg-white/80 backdrop-blur-xl border border-slate-100 rounded-3xl shadow-2xl p-8 relative z-10 animate-zoom-in">
-                    <div class="text-center mb-10">
-                        <div class="w-16 h-16 rounded-2xl bg-emerald-500 flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-emerald-500/30 mx-auto mb-4">V</div>
-                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Virtus</h1>
-                        <p class="text-slate-500 text-sm mt-1">Sistema Integrado de Gestão de Obras</p>
-                    </div>
-
-                    <form class="space-y-5" onsubmit="window.login(event)">
-                        <div class="space-y-1">
-                            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">E-mail corporativo</label>
-                            <div class="relative">
-                                <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
-                                <input type="email" value="usuario@virtus.com.br" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" required />
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-1">
-                            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Senha</label>
-                            <div class="relative">
-                                <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
-                                <input type="password" value="******" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" required />
-                            </div>
-                        </div>
-
-                        <div class="space-y-1 pt-2">
-                            <label class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Simular Acesso Como:</label>
-                            <div class="relative">
-                                <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500 w-4 h-4"></i>
-                                <select id="loginRole" class="w-full bg-emerald-50/50 border border-emerald-200 text-emerald-900 font-medium rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all cursor-pointer">
-                                    ${ROLES.map(r => `<option value="${r}" ${r===state.currentRole?'selected':''}>${r}</option>`).join('')}
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl py-3.5 text-sm font-semibold shadow-lg transition-all flex items-center justify-center gap-2 mt-6 group">
-                            Entrar no Sistema <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>`;
-        }
-
-        function renderDashboard() {
-            const stats = [
-                { title: 'Obras em Andamento', value: '12', trend: '+2 esse mês', color: 'bg-emerald-500' },
-                { title: 'Demandas Pendentes', value: '34', trend: '5 em atraso', color: 'bg-amber-500' },
-                { title: 'Faturamento Estimado', value: 'R$ 450k', trend: 'Alinhado com a meta', color: 'bg-blue-500' },
-                { title: 'Tempo Médio Entrega', value: '4.2 Dias', trend: 'SLA dentro da meta', color: 'bg-indigo-500' }
-            ];
-
-            return `
-            <div class="max-w-6xl mx-auto space-y-8 animate-fade-in">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold tracking-tight text-slate-900">Visão Geral</h1>
-                        <p class="text-slate-500 text-sm mt-1">Bem-vindo ao sistema de gestão Virtus.</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    ${stats.map(s => `
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-40 relative overflow-hidden group">
-                        <div class="relative z-10">
-                            <p class="text-sm font-medium text-slate-500">${s.title}</p>
-                            <h3 class="text-3xl font-bold mt-2 text-slate-900">${s.value}</h3>
-                        </div>
-                        <p class="text-xs text-slate-400 relative z-10">${s.trend}</p>
-                        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full opacity-10 group-hover:scale-125 transition-transform duration-500 ${s.color}"></div>
-                    </div>`).join('')}
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 h-96 flex items-center justify-center">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100">
-                            <i data-lucide="layout-dashboard" class="text-slate-300 w-6 h-6"></i>
-                        </div>
-                        <p class="text-slate-500 font-medium">Gráficos de Desempenho em breve</p>
-                        <p class="text-sm text-slate-400 mt-1">A área de BI está sendo conectada ao banco de dados.</p>
-                    </div>
-                </div>
-            </div>`;
-        }
-
-        function renderKanban() {
-            const columns = [
-                { id: 'todo', title: 'A Fazer' },
-                { id: 'in_progress', title: 'Em Andamento' },
-                { id: 'review', title: 'Validação' },
-                { id: 'done', title: 'Concluído' }
-            ];
-
-            let kanbanHtml = `
-            <div class="h-full flex flex-col space-y-6 animate-fade-in">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <h1 class="text-2xl font-bold tracking-tight text-slate-900">Kanban de Demandas</h1>
-                        <p class="text-slate-500 text-sm mt-1">Demandas do seu setor (<strong class="text-emerald-600">${state.currentRole}</strong>) estão destacadas.</p>
-                    </div>
-                    <button onclick="window.toggleNewTaskModal(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all shadow-sm flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Nova Demanda
-                    </button>
-                </div>
-                <div class="flex-1 flex gap-6 overflow-x-auto pb-4">`;
-
-            columns.forEach(col => {
-                const colTasks = state.tasks.filter(t => t.column === col.id);
-                kanbanHtml += `
-                    <div class="flex-shrink-0 w-80 bg-slate-100/50 rounded-2xl p-4 flex flex-col border border-slate-200/50" ondragover="window.dragOver(event)" ondrop="window.drop(event, '${col.id}')">
-                        <div class="flex items-center justify-between mb-4 px-1">
-                            <h3 class="font-semibold text-slate-700 text-sm">${col.title}</h3>
-                            <span class="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">${colTasks.length}</span>
-                        </div>
-                        <div class="flex-1 flex flex-col gap-3 overflow-y-auto min-h-[150px] pr-1">`;
-                
-                colTasks.forEach(task => {
-                    const isMine = task.role === state.currentRole || (task.assignees || []).some(a => a.includes(state.currentRole));
-                    const clientName = task.clientId !== 'internal' ? (state.clients.find(c => c.id === task.clientId)?.nome || 'Cliente') : '';
-                    
-                    kanbanHtml += `
-                            <div draggable="true" ondragstart="window.dragStart(event, '${task.id}')" ondragend="window.dragEnd(event)" onclick="window.openTask('${task.id}')"
-                                class="p-4 rounded-xl shadow-sm cursor-grab active:cursor-grabbing transition-all group relative border ${isMine ? 'bg-emerald-50/80 border-emerald-300 ring-2 ring-emerald-500/20 hover:shadow-md hover:border-emerald-400' : 'bg-white border-slate-100 hover:shadow-md hover:border-slate-300'}">
-                                <div class="flex justify-between items-start mb-2">
-                                    <span class="text-[10px] uppercase font-bold px-2 py-1 rounded-md ${isMine ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-100 text-slate-600'}">${task.role}</span>
-                                    ${task.clientId !== 'internal' ? `<span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-1 rounded-md border border-blue-100 font-medium truncate max-w-[100px]">${clientName}</span>` : ''}
-                                </div>
-                                <p class="text-sm font-medium leading-snug mb-3 ${isMine ? 'text-emerald-950' : 'text-slate-800'}">${task.title}</p>
-                                
-                                ${(task.assignees && task.assignees.length > 0) ? `
-                                <div class="flex flex-wrap gap-1 mb-3">
-                                    ${task.assignees.map(a => `<span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> ${a.split(' ')[0]}</span>`).join('')}
-                                </div>` : ''}
-
-                                <div class="flex items-center justify-between text-xs mt-auto pt-3 border-t border-black/5">
-                                    <div class="flex items-center gap-3 ${isMine ? 'text-emerald-700' : 'text-slate-400'}">
-                                        <span class="flex items-center gap-1"><i data-lucide="message-square" class="w-3 h-3"></i> ${task.comments?.length || 0}</span>
-                                    </div>
-                                    <span class="flex items-center gap-1 px-2 py-1 rounded-md ${isMine ? 'bg-emerald-200/50 text-emerald-800' : 'bg-slate-50 text-slate-500'}">
-                                        <i data-lucide="clock" class="w-2.5 h-2.5"></i> ${task.days}d SLA
-                                    </span>
-                                </div>
-                            </div>`;
-                });
-                kanbanHtml += `</div></div>`;
-            });
-            kanbanHtml += `</div>`;
-
-            // MODAL NOVA DEMANDA
-            if(state.isNewTaskModalOpen) {
-                kanbanHtml += `
-                <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <form onsubmit="window.handleCreateTask(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl animate-zoom-in">
-                        <h3 class="text-xl font-bold mb-6 text-slate-800">Criar Nova Demanda</h3>
-                        <div class="space-y-4">
-                            <div><label class="text-sm font-medium text-slate-700 block mb-1">Título da Demanda</label><input type="text" id="newTaskTitle" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" placeholder="O que precisa ser feito?" /></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="text-sm font-medium text-slate-700 block mb-1">Setor Responsável</label>
-                                    <select id="newTaskRole" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500">
-                                        ${ROLES.map(r => `<option value="${r}">${r}</option>`).join('')}
-                                    </select>
-                                </div>
-                                <div><label class="text-sm font-medium text-slate-700 block mb-1">Prazo SLA (Dias)</label><input type="number" id="newTaskDays" min="1" value="1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" /></div>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-slate-700 block mb-1">Atribuir Pessoa (Opcional)</label>
-                                <select onchange="window.addTaskAssignee(this.value); this.value='';" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500 mb-2">
-                                    <option value="">Selecione para adicionar...</option>
-                                    ${TEAM_USERS.map(u => `<option value="${u}">${u}</option>`).join('')}
-                                </select>
-                                <div class="flex flex-wrap gap-2">
-                                    ${state.newTaskAssignees.map(a => `<span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md flex items-center gap-1">${a} <button type="button" onclick="window.removeTaskAssignee('${a}')" class="hover:text-red-500 font-bold ml-1">×</button></span>`).join('')}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-8 flex gap-3 justify-end">
-                            <button type="button" onclick="window.toggleNewTaskModal(false)" class="px-4 py-2 text-slate-500 hover:bg-slate-100 rounded-xl text-sm font-medium transition-colors">Cancelar</button>
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl text-sm font-medium transition-colors shadow-sm">Criar Card</button>
-                        </div>
-                    </form>
-                </div>`;
-            }
-
-            // MODAL DETALHE TAREFA
-            if(state.selectedTask) {
-                const task = state.selectedTask;
-                kanbanHtml += `
-                <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <div class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-zoom-in">
-                        <div class="p-6 border-b border-slate-100 flex justify-between items-start bg-slate-50/50">
-                            <div>
-                                <div class="flex gap-2 mb-2"><span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-1 rounded-md">Setor: ${task.role}</span></div>
-                                <h2 class="text-2xl font-bold text-slate-900">${task.title}</h2>
-                            </div>
-                            <button onclick="window.closeTask()" class="p-2 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
-                        </div>
-                        <div class="p-6 flex-1 overflow-y-auto space-y-6">
-                            <div class="grid grid-cols-2 gap-6">
-                                <div>
-                                    <label class="text-sm font-semibold text-slate-700 block mb-2 flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> Prazo SLA</label>
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" min="1" value="${task.days}" onchange="window.updateTaskDays(this.value)" class="w-24 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-emerald-500 text-center font-bold" />
-                                        <span class="text-sm text-slate-500">Dias</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-semibold text-slate-700 block mb-2">Obra / Cliente Vinculado</label>
-                                    <select onchange="window.updateTaskClient(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500">
-                                        <option value="internal" ${task.clientId === 'internal' ? 'selected' : ''}>🏢 Demanda Interna</option>
-                                        <optgroup label="Clientes Cadastrados">
-                                            ${state.clients.map(c => `<option value="${c.id}" ${task.clientId === c.id ? 'selected' : ''}>👤 ${c.nome}</option>`).join('')}
-                                        </optgroup>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="text-sm font-semibold text-slate-700 block mb-2 flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i> Responsáveis</label>
-                                <div class="flex flex-wrap gap-2 mb-2">
-                                    ${(task.assignees || []).map(a => `<span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg flex items-center gap-2 font-medium"><i data-lucide="user" class="w-3 h-3"></i> ${a} <button onclick="window.removeTaskAssigneeExisting('${a}')" class="hover:text-red-500 ml-1">×</button></span>`).join('')}
-                                </div>
-                                <select onchange="window.addTaskAssigneeExisting(this.value); this.value='';" class="w-full max-w-xs bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-emerald-500">
-                                    <option value="">+ Anexar pessoa...</option>
-                                    ${TEAM_USERS.map(u => `<option value="${u}">${u}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="pt-4 border-t border-slate-100">
-                                <h3 class="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4"></i> Comentários</h3>
-                                <div class="space-y-4 mb-4 max-h-60 overflow-y-auto pr-2">
-                                    ${(!task.comments || task.comments.length === 0) ? '<p class="text-sm text-slate-400 italic text-center py-4">Nenhum comentário ainda.</p>' : 
-                                    task.comments.map(c => `
-                                        <div class="flex flex-col ${c.author === state.currentRole ? 'items-end' : 'items-start'}">
-                                            <div class="flex items-center gap-2 mb-1"><span class="text-xs font-semibold text-slate-600">${c.author}</span><span class="text-[10px] text-slate-400">${c.date}</span></div>
-                                            <div class="px-4 py-2 rounded-2xl max-w-[85%] text-sm ${c.author === state.currentRole ? 'bg-emerald-600 text-white rounded-tr-sm' : 'bg-slate-100 text-slate-800 rounded-tl-sm'}">${c.text}</div>
-                                        </div>`).join('')}
-                                </div>
-                                <form onsubmit="window.addComment(event)" class="flex gap-2">
-                                    <input type="text" id="taskCommentInput" placeholder="Escreva um comentário..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" />
-                                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium">Enviar</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            }
-
-            kanbanHtml += `</div>`;
-            return kanbanHtml;
-        }
-
-        function renderFinance() {
-            let entradasTot = 0, saidasTot = 0;
-            state.financeEntries.forEach(e => {
-                if(e.tipo === 'Entrada') entradasTot += Number(e.valor) - (Number(e.imposto) || 0);
-                else saidasTot += Number(e.valor);
-            });
-            const saldoTot = 245000 + entradasTot - saidasTot;
-            const filtered = state.financeEntries.filter(e => state.financeFilter === 'Todos' || e.tipo === state.financeFilter);
-
-            let html = `
-            <div class="max-w-6xl mx-auto space-y-8 animate-fade-in">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <h1 class="text-2xl font-bold tracking-tight text-slate-900">Módulo Financeiro</h1>
-                        <p class="text-slate-500 text-sm mt-1">Gestão de fluxo de caixa, pagamentos e impostos.</p>
-                    </div>
-                    <button onclick="window.toggleFinanceModal(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all shadow-sm flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Novo Lançamento
-                    </button>
-                </div>`;
-
-            if(state.isFinanceModalOpen) {
-                html += `
-                <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <form onsubmit="window.handleAddEntry(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl animate-zoom-in">
-                        <h3 class="text-xl font-bold mb-6 text-slate-800">Registrar Movimentação</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="text-sm font-medium text-slate-700 block mb-1">Tipo de Lançamento</label>
-                                <div class="grid grid-cols-3 gap-2">
-                                    ${['Entrada', 'Saída', 'Funcionário'].map(t => `<button type="button" onclick="window.setFinanceTipo('${t}')" class="py-2 text-xs font-semibold rounded-lg border transition-all ${state.newFinanceTipo === t ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}">${t}</button>`).join('')}
-                                </div>
-                            </div>
-                            <div><label class="text-sm font-medium text-slate-700 block mb-1">Descrição</label><input type="text" id="finDesc" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" placeholder="Ex: Pagamento Fornecedor X" /></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><label class="text-sm font-medium text-slate-700 block mb-1">Valor Bruto (R$)</label><input type="number" id="finValor" step="0.01" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" placeholder="0.00" /></div>
-                                <div><label class="text-sm font-medium text-slate-700 block mb-1">Vencimento / Data</label><input type="date" id="finVenc" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" /></div>
-                            </div>
-                            ${state.newFinanceTipo === 'Entrada' ? `
-                            <div class="animate-slide-in-top bg-slate-50 p-4 rounded-xl border border-slate-100"><label class="text-sm font-medium text-slate-700 block mb-1">Imposto Retido (R$)</label><input type="number" id="finImposto" step="0.01" class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 text-sm outline-none focus:border-emerald-500" placeholder="0.00 (Opcional)" /><p class="text-xs text-slate-400 mt-1">Este valor será subtraído da entrada no cálculo do saldo líquido.</p></div>` : ''}
-                            <div>
-                                <label class="text-sm font-medium text-slate-700 block mb-1">Status</label>
-                                <select id="finStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500"><option value="Pendente">Pendente</option><option value="Pago">Pago / Recebido</option><option value="Em Atraso">Em Atraso</option></select>
-                            </div>
-                        </div>
-                        <div class="mt-8 flex gap-3 justify-end">
-                            <button type="button" onclick="window.toggleFinanceModal(false)" class="px-4 py-2.5 text-slate-500 hover:bg-slate-100 rounded-xl text-sm font-medium transition-colors">Cancelar</button>
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm">Salvar Registro</button>
-                        </div>
-                    </form>
-                </div>`;
-            }
-
-            html += `
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-slate-900 p-6 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-center">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500 blur-[60px] opacity-20 rounded-full"></div>
-                        <p class="text-slate-400 text-sm font-medium relative z-10">Saldo Projetado</p>
-                        <h3 class="text-3xl font-bold mt-1 text-white relative z-10">${formatCurrency(saldoTot)}</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
-                        <p class="text-slate-500 text-sm font-medium">Entradas Líquidas Registradas</p>
-                        <h3 class="text-2xl font-bold mt-1 text-emerald-600">+${formatCurrency(entradasTot)}</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
-                        <p class="text-slate-500 text-sm font-medium">Saídas Registradas</p>
-                        <h3 class="text-2xl font-bold mt-1 text-red-500">-${formatCurrency(saidasTot)}</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <h3 class="font-semibold text-slate-800">Histórico de Movimentações</h3>
-                        <div class="flex bg-slate-50 p-1 rounded-xl border border-slate-200">
-                            ${['Todos', 'Entrada', 'Saída', 'Funcionário'].map(f => `<button onclick="window.setFinanceFilter('${f}')" class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${state.financeFilter === f ? 'bg-white shadow-sm text-slate-800 border border-slate-200/50' : 'text-slate-500 hover:text-slate-700'}">${f === 'Entrada' ? 'Lucros/Entradas' : f === 'Saída' ? 'Despesas' : f}</button>`).join('')}
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-100">
-                                <tr><th class="px-6 py-4">Descrição</th><th class="px-6 py-4">Tipo</th><th class="px-6 py-4">Valor Bruto</th><th class="px-6 py-4">Imposto</th><th class="px-6 py-4">Vencimento</th><th class="px-6 py-4">Status</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                ${filtered.map(e => {
-                                    const isLate = e.status === 'Em Atraso', isEnt = e.tipo === 'Entrada', isFunc = e.tipo === 'Funcionário';
-                                    return `
-                                    <tr class="hover:bg-slate-50/50 transition-colors ${isLate ? 'bg-red-50/30' : ''}">
-                                        <td class="px-6 py-4 font-medium text-slate-800">${e.desc}</td>
-                                        <td class="px-6 py-4"><span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${isEnt ? 'bg-emerald-100 text-emerald-700' : isFunc ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}">${e.tipo}</span></td>
-                                        <td class="px-6 py-4 font-bold ${isEnt ? 'text-emerald-600' : 'text-slate-700'}">${isEnt ? '+' : '-'}${formatCurrency(e.valor)}</td>
-                                        <td class="px-6 py-4 text-slate-500 text-xs">${isEnt && e.imposto > 0 ? `<span class="text-red-500">-${formatCurrency(e.imposto)}</span>` : '-'}</td>
-                                        <td class="px-6 py-4 text-slate-500">${new Date(e.vencimento).toLocaleDateString('pt-BR')}</td>
-                                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 w-max ${e.status === 'Pago' ? 'bg-emerald-100 text-emerald-700' : e.status === 'Pendente' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700 animate-pulse'}">${isLate ? '<i data-lucide="alert-circle" class="w-3 h-3"></i>' : ''} ${e.status}</span></td>
-                                    </tr>`;
-                                }).join('')}
-                                ${filtered.length === 0 ? '<tr><td colspan="6" class="text-center py-8 text-slate-400">Nenhuma movimentação registrada.</td></tr>' : ''}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>`;
-            return html;
-        }
-
-        function renderAgenda() {
-            let html = `
-            <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
-                <div class="flex justify-between items-end">
-                    <div><h1 class="text-2xl font-bold tracking-tight text-slate-900">Agenda & Notas</h1><p class="text-slate-500 text-sm mt-1">Gerencie compromissos da equipe e anotações.</p></div>
-                    <button onclick="window.toggleEventModal(true)" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all shadow-sm flex items-center gap-2"><i data-lucide="calendar-plus" class="w-4 h-4"></i> Novo Evento</button>
-                </div>`;
-
-            if(state.isEventModalOpen) {
-                html += `
-                <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <form onsubmit="window.addEvent(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl animate-zoom-in">
-                        <h3 class="text-xl font-bold mb-6 text-slate-800">Agendar Novo Evento</h3>
-                        <div class="space-y-4">
-                            <div><label class="text-sm font-medium text-slate-700 block mb-1">Título / Demanda</label><input type="text" id="evTitle" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" placeholder="Ex: Vistoria Terreno 02" /></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><label class="text-sm font-medium text-slate-700 block mb-1">Data</label><input type="date" id="evDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" /></div>
-                                <div><label class="text-sm font-medium text-slate-700 block mb-1">Horário</label><input type="time" id="evTime" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" /></div>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-slate-700 block mb-1">Marcar Membro (Opcional)</label>
-                                <select id="evAssignee" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500"><option value="">Ninguém (Evento Geral)</option>${TEAM_USERS.map(u => `<option value="${u}">${u}</option>`).join('')}</select>
-                            </div>
-                        </div>
-                        <div class="mt-8 flex gap-3 justify-end"><button type="button" onclick="window.toggleEventModal(false)" class="px-4 py-2 text-slate-500 hover:bg-slate-100 rounded-xl text-sm font-medium">Cancelar</button><button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2 rounded-xl text-sm font-medium shadow-sm">Agendar</button></div>
-                    </form>
-                </div>`;
-            }
-
-            html += `
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 min-h-[500px]">
-                        <div class="flex justify-between items-center mb-6"><h3 class="font-semibold text-lg">Próximos Eventos</h3><button class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition-all">Esta Semana</button></div>
-                        <div class="space-y-4">
-                            ${state.events.length === 0 ? '<p class="text-sm text-slate-400">Nenhum evento agendado.</p>' : 
-                            state.events.map(ev => `
-                            <div class="p-4 bg-${ev.type}-50 border border-${ev.type}-100 rounded-xl flex items-center justify-between">
-                                <div>
-                                    <div class="flex items-center gap-3 mb-1"><p class="text-xs font-bold text-${ev.type}-700 bg-${ev.type}-100 px-2 py-0.5 rounded-md inline-block">${ev.time} | ${new Date(ev.date).toLocaleDateString('pt-BR')}</p>${ev.assignee ? `<span class="text-xs text-slate-600 font-medium flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> ${ev.assignee}</span>` : ''}</div>
-                                    <p class="text-base font-semibold text-slate-800 leading-tight mt-1">${ev.title}</p>
-                                </div>
-                                <button class="text-${ev.type}-600 hover:text-${ev.type}-800"><i data-lucide="more-vertical" class="w-4 h-4"></i></button>
-                            </div>`).join('')}
-                        </div>
-                    </div>
-                    <div class="bg-slate-900 text-white rounded-3xl shadow-lg p-6 relative overflow-hidden flex flex-col max-h-[600px]">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500 blur-[80px] opacity-20 rounded-full"></div>
-                        <h3 class="font-semibold text-lg mb-4 flex items-center gap-2 relative z-10"><i data-lucide="file-text" class="text-yellow-400 w-5 h-5"></i> Bloco de Notas</h3>
-                        <form onsubmit="window.addNote(event)" class="relative z-10 mb-6">
-                            <textarea id="newNoteInput" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 outline-none resize-none focus:border-yellow-500/50 transition-colors" placeholder="Digite uma nova anotação estratégica..." rows="3"></textarea>
-                            <div class="flex justify-end mt-2"><button type="submit" class="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-lg text-sm font-bold transition-colors">Salvar Nota</button></div>
-                        </form>
-                        <div class="flex-1 overflow-y-auto space-y-3 relative z-10 pr-2">
-                            ${state.notes.map(note => `
-                            <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
-                                <div class="text-xs font-mono text-yellow-500/70 mb-2 border-b border-slate-700/50 pb-1 inline-block">${new Date(note.date).toLocaleDateString('pt-BR')}</div>
-                                <p class="text-sm text-slate-300 leading-relaxed">${note.text}</p>
-                            </div>`).join('')}
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-            return html;
-        }
-
-        function renderClientForm() {
-            let html = `
-            <div class="max-w-4xl mx-auto space-y-8 animate-fade-in pb-12">
-                <div><h1 class="text-2xl font-bold tracking-tight text-slate-900">Novo Cadastro de Cliente</h1><p class="text-slate-500 text-sm mt-1">Preencha os dados e anexe os documentos para gerar a ficha (PDF).</p></div>
-                <form onsubmit="window.handleGeneratePDF(event)" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 space-y-8">
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-100 pb-2"><span class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm flex items-center justify-center">1</span>Dados Pessoais</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div class="space-y-1"><label class="text-sm font-medium text-slate-700">Nome Completo</label><input type="text" id="cliNome" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500 transition-all" /></div>
-                            <div class="space-y-1"><label class="text-sm font-medium text-slate-700">Telefone / WhatsApp</label><input type="text" id="cliTel" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500 transition-all" /></div>
-                            <div class="space-y-1 md:col-span-2"><label class="text-sm font-medium text-slate-700">Endereço Atual</label><input type="text" id="cliEnd" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500 transition-all" /></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-100 pb-2"><span class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm flex items-center justify-center">2</span>Perfil Financeiro</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
-                            <div class="space-y-1"><label class="text-sm font-medium text-slate-700">Ocupação Principal</label><input type="text" id="cliOcu" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" /></div>
-                            <div class="space-y-1"><label class="text-sm font-medium text-slate-700">Salário / Renda Mensal Base</label><input type="text" id="cliSal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500" /></div>
-                            <div class="space-y-1"><label class="text-sm font-medium text-slate-700">Tipo de Renda</label><select id="cliTipoRenda" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-emerald-500"><option value="Formal">Formal (CLT, Concursado)</option><option value="Informal">Informal (Autônomo, MEI)</option></select></div>
-                            <div class="space-y-1 bg-emerald-50 border border-emerald-100 p-3 rounded-xl">
-                                <label class="text-sm font-medium text-emerald-800">Anexar Comprovante (PDF/IMG)</label>
-                                <input type="file" class="w-full text-sm text-emerald-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-emerald-200 file:text-emerald-800 hover:file:bg-emerald-300 mt-1 cursor-pointer" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-100 pb-2"><span class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm flex items-center justify-center">3</span>Composição Familiar</h3>
-                        <div class="flex items-center gap-3 mb-4">
-                            <label class="text-sm font-medium text-slate-700 cursor-pointer flex items-center gap-2">
-                                <input type="checkbox" onchange="window.toggleDependentes(this.checked)" ${state.hasDependentesForm ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" />
-                                Possui dependentes? (Cônjuge, Filhos...)
-                            </label>
-                        </div>
-                        ${state.hasDependentesForm ? `
-                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4 animate-slide-in-top">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="space-y-1"><label class="text-xs font-medium text-slate-600">Nome do Dependente Principal</label><input type="text" id="cliDepNome" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" /></div>
-                                <div class="space-y-1"><label class="text-xs font-medium text-slate-600">Grau de Parentesco / Idade</label><input type="text" id="cliDepPar" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" /></div>
-                            </div>
-                            <div class="pt-2 border-t border-slate-200">
-                                <label class="text-xs font-medium text-slate-600 block mb-1 flex items-center gap-1"><i data-lucide="paperclip" class="w-3 h-3"></i> Anexar Documento do Dependente (RG/CPF)</label>
-                                <input type="file" class="text-sm text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-slate-200 file:text-slate-700 hover:file:bg-slate-300 cursor-pointer" />
-                            </div>
-                        </div>` : ''}
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-100 pb-2"><span class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-sm flex items-center justify-center">4</span>Documentação & Projeto</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <label class="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-emerald-400 hover:bg-emerald-50/50 transition-colors cursor-pointer group block">
-                                <div class="w-12 h-12 bg-slate-100 group-hover:bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 transition-colors"><i data-lucide="search" class="text-slate-400 group-hover:text-emerald-600 w-5 h-5"></i></div>
-                                <p class="text-sm font-medium text-slate-700">Foto da Fachada Desejada</p><p class="text-xs text-slate-400 mt-1 mb-3">Ref. de arquitetura (JPG/PNG)</p><input type="file" class="text-xs text-slate-500 w-full file:bg-slate-100 file:border-0 file:rounded-md file:px-2 file:py-1 cursor-pointer" />
-                            </label>
-                            <label class="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-emerald-400 hover:bg-emerald-50/50 transition-colors cursor-pointer group block">
-                                <div class="w-12 h-12 bg-slate-100 group-hover:bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 transition-colors"><i data-lucide="file-text" class="text-slate-400 group-hover:text-emerald-600 w-5 h-5"></i></div>
-                                <p class="text-sm font-medium text-slate-700">Documento de Identidade</p><p class="text-xs text-slate-400 mt-1 mb-3">RG ou CNH do titular (PDF/IMG)</p><input type="file" class="text-xs text-slate-500 w-full file:bg-slate-100 file:border-0 file:rounded-md file:px-2 file:py-1 cursor-pointer" />
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="pt-6 border-t border-slate-100 flex justify-end">
-                        <button type="submit" id="btnGerarPdf" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-semibold shadow-md transition-all flex items-center gap-2">
-                            <i data-lucide="file-text" class="w-4 h-4"></i> Gerar Ficha em PDF
-                        </button>
-                    </div>
-                </form>
-            </div>`;
-            return html;
-        }
-
-        function renderPortal() {
-            const currentClient = state.clients.find(c => c.id === state.portalClientId) || state.clients[0];
-            if (!currentClient) return '<div class="p-8 text-center text-slate-500">Nenhum cliente cadastrado ainda.</div>';
-            
-            const currentPhaseIndex = currentClient.phaseIndex || 0;
-
-            let html = `
-            <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-6 flex items-center justify-between">
-                    <span class="text-sm font-medium text-slate-500">Simulando visão do cliente:</span>
-                    <select onchange="window.setPortalClient(this.value)" class="bg-slate-50 border border-slate-200 text-sm rounded-lg px-3 py-2 outline-none focus:border-emerald-500">
-                        ${state.clients.map(c => `<option value="${c.id}" ${currentClient.id === c.id ? 'selected' : ''}>${c.nome}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="bg-emerald-600 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden">
-                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-2xl"></div>
-                    <h1 class="text-3xl font-bold">Portal de ${currentClient.nome}</h1>
-                    <p class="mt-2 text-emerald-100 text-lg opacity-90">Acompanhe a evolução do seu sonho, passo a passo.</p>
-                    <div class="mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-emerald-200 mb-1">Fase Atual</p>
-                            <h2 class="text-2xl font-semibold flex items-center gap-2"><i data-lucide="clock" class="animate-spin-slow w-6 h-6"></i> ${PHASES[currentPhaseIndex]}</h2>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-3xl font-bold">${Math.round((currentPhaseIndex / (PHASES.length - 1)) * 100)}%</p>
-                            <p class="text-sm text-emerald-200">Concluído</p>
-                        </div>
-                    </div>
-                </div>`;
-
-            if (currentClient.comments && currentClient.comments.length > 0) {
-                html += `
-                <div class="bg-emerald-50 rounded-3xl p-6 border border-emerald-100">
-                    <h3 class="font-semibold text-emerald-800 mb-3 flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4"></i> Atualizações Recentes</h3>
-                    <div class="space-y-3">
-                        ${currentClient.comments.map(c => `<div class="bg-white p-4 rounded-xl shadow-sm text-sm text-slate-700">${c}</div>`).join('')}
-                    </div>
-                </div>`;
-            }
-
-            html += `
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                    <h3 class="text-lg font-bold text-slate-800 mb-8">Linha do Tempo da Obra</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-                        ${PHASES.map((phase, index) => {
-                            const isComp = index < currentPhaseIndex, isCur = index === currentPhaseIndex, isFut = index > currentPhaseIndex;
-                            let circleHtml = isComp ? `<div class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-sm"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div>` : 
-                                             isCur ? `<div class="w-6 h-6 rounded-full border-4 border-emerald-500 bg-white shadow-sm shadow-emerald-200 relative"><div class="absolute inset-0 m-auto w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div></div>` : 
-                                             `<div class="w-6 h-6 rounded-full border-2 border-slate-200 bg-slate-50"></div>`;
-                            return `
-                            <div class="flex items-start gap-4 ${isFut ? 'opacity-50' : ''}">
-                                <div class="flex flex-col items-center mt-0.5">${circleHtml}</div>
-                                <div class="flex-1 pb-4 border-b border-slate-50">
-                                    <p class="font-medium text-sm ${isCur ? 'text-emerald-700 font-bold' : isComp ? 'text-slate-800' : 'text-slate-400'}">${index + 1}. ${phase}</p>
-                                    ${isCur ? `<p class="text-xs text-emerald-600/80 mt-1 bg-emerald-50 inline-block px-2 py-1 rounded-md">Em andamento pela nossa equipe.</p>` : ''}
-                                </div>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                </div>
-            </div>`;
-            return html;
-        }
-
-        function renderObras() {
-            let html = `
-            <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
-                <div><h1 class="text-2xl font-bold tracking-tight text-slate-900">Acompanhamento de Obras</h1><p class="text-slate-500 text-sm mt-1">Gerencie a fase atual de cada cliente e adicione comentários visíveis no portal.</p></div>
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-100"><tr><th class="px-6 py-4">Cliente</th><th class="px-6 py-4">Fase Atual da Obra</th><th class="px-6 py-4">Progresso</th><th class="px-6 py-4 text-right">Ações</th></tr></thead>
-                        <tbody class="divide-y divide-slate-50">
-                            ${state.clients.map(client => `
-                                <tr class="hover:bg-slate-50 transition-colors">
-                                    <td class="px-6 py-4 font-medium text-slate-800">${client.nome}<div class="text-xs text-slate-400 font-normal mt-0.5">${client.telefone}</div></td>
-                                    <td class="px-6 py-4"><select onchange="window.updateObraPhase('${client.id}', this.value)" class="bg-slate-50 border border-slate-200 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-emerald-500">${PHASES.map((p, i) => `<option value="${i}" ${client.phaseIndex === i ? 'selected' : ''}>${i+1}. ${p}</option>`).join('')}</select></td>
-                                    <td class="px-6 py-4"><div class="w-full bg-slate-100 rounded-full h-2.5 max-w-[150px]"><div class="bg-emerald-500 h-2.5 rounded-full" style="width: ${Math.round((client.phaseIndex / (PHASES.length-1)) * 100)}%"></div></div><span class="text-xs text-slate-500 mt-1 block">${Math.round((client.phaseIndex / (PHASES.length-1)) * 100)}% concluído</span></td>
-                                    <td class="px-6 py-4 text-right"><button onclick="window.toggleActiveObra('${client.id}')" class="text-emerald-600 hover:text-emerald-700 font-medium text-sm transition-colors">+ Comentários</button></td>
-                                </tr>
-                                ${state.activeObraClient === client.id ? `
-                                <tr class="bg-emerald-50/50"><td colspan="4" class="px-6 py-4 border-b border-emerald-100"><form onsubmit="window.addObraComment(event, '${client.id}')" class="flex gap-3 max-w-2xl"><input type="text" id="obraComment_${client.id}" placeholder="Adicionar atualização para o cliente..." class="flex-1 bg-white border border-emerald-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-emerald-500" autofocus /><button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium">Publicar</button></form></td></tr>` : ''}
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>`;
-            return html;
-        }
-
-        function renderAppLayout() {
-            const navItems = getNavItems();
-            let viewContent = '';
-
-            if (state.currentView === 'dashboard') viewContent = renderDashboard();
-            if (state.currentView === 'kanban') viewContent = renderKanban();
-            if (state.currentView === 'finance') viewContent = renderFinance();
-            if (state.currentView === 'agenda') viewContent = renderAgenda();
-            if (state.currentView === 'new_client') viewContent = renderClientForm();
-            if (state.currentView === 'portal') viewContent = renderPortal();
-            if (state.currentView === 'obras') viewContent = renderObras();
-
-            return `
-            <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
-                <div class="h-20 flex items-center px-8 border-b border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-white font-bold text-xl shadow-sm shadow-emerald-200">V</div>
-                        <span class="text-xl font-semibold tracking-tight text-slate-900">Virtus</span>
-                    </div>
-                </div>
-                <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                    ${navItems.map(item => `
-                        <button onclick="window.changeView('${item.id}')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium ${state.currentView === item.id ? 'bg-emerald-50 text-emerald-700 shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}">
-                            <i data-lucide="${item.icon}" class="${state.currentView === item.id ? 'text-emerald-600' : 'text-slate-400'} w-4 h-4"></i> ${item.label}
-                        </button>
-                    `).join('')}
-                </nav>
-                <div class="p-4 border-t border-slate-100">
-                    <button onclick="window.logout()" class="w-full text-sm font-medium text-slate-500 hover:text-red-600 text-left px-4 py-2 transition-colors">Sair do Sistema</button>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mt-2">
-                        <p class="text-xs text-slate-500 mb-2 font-medium">Trocar Perfil (Dev):</p>
-                        <select onchange="window.changeRole(this.value)" class="w-full bg-white border border-slate-200 text-xs rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer shadow-sm">
-                            ${ROLES.map(r => `<option value="${r}" ${state.currentRole === r ? 'selected' : ''}>${r}</option>`).join('')}
-                        </select>
-                    </div>
-                </div>
-            </aside>
-
-            <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-                <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200/50 flex items-center justify-between px-8 z-10">
-                    <div class="flex items-center bg-slate-100/80 rounded-full px-4 py-2 w-96 border border-slate-200/50 focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:bg-white transition-all">
-                        <i data-lucide="search" class="text-slate-400 w-4 h-4"></i>
-                        <input type="text" placeholder="Buscar obras, clientes ou demandas..." class="bg-transparent border-none outline-none ml-2 text-sm w-full placeholder:text-slate-400" />
-                    </div>
-                    <div class="flex items-center gap-6">
-                        <div class="relative">
-                            <button onclick="window.toggleNotifications()" class="relative p-2 text-slate-400 hover:text-slate-600 transition-colors rounded-full hover:bg-slate-50">
-                                <i data-lucide="bell" class="w-5 h-5"></i>
-                                <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
-                            </button>
-                            ${state.notificationsOpen ? `
-                            <div class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100 p-4 py-2 z-50 animate-slide-in-top">
-                                <h4 class="font-semibold text-sm px-2 py-2 border-b border-slate-50 mb-2">Notificações</h4>
-                                <div class="space-y-1">
-                                    <div class="p-2 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer text-sm">
-                                        <p class="text-slate-800"><span class="font-semibold text-emerald-600">@sistema</span> Nova demanda atribuída.</p>
-                                        <span class="text-xs text-slate-400 mt-1 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Agora mesmo</span>
-                                    </div>
-                                </div>
-                            </div>` : ''}
-                        </div>
-                        <div class="flex items-center gap-3 pl-6 border-l border-slate-200">
-                            <div class="text-right hidden sm:block">
-                                <p class="text-sm font-semibold text-slate-900">Usuário Ativo</p>
-                                <p class="text-xs text-emerald-600 font-medium">${state.currentRole}</p>
-                            </div>
-                            <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name=${state.currentRole}&background=10b981&color=fff" alt="Avatar" />
-                            </div>
-                        </div>
-                    </div>
-                </header>
-                <div class="flex-1 overflow-auto p-8 relative">
-                    ${viewContent}
-                </div>
-            </main>`;
-        }
-
-        // --- FUNÇÃO PRINCIPAL DE INJEÇÃO DOM ---
-        function render() {
-            const root = document.getElementById('root');
-            if (!state.isAuthenticated) {
-                root.innerHTML = renderLogin();
-            } else {
-                root.innerHTML = renderAppLayout();
-            }
-            
-            // Recriar ícones lucide sempre que o DOM for atualizado
-            lucide.createIcons();
-        }
-
-        // Inicializar
-        render();
-
-    </script>
+<body>
+
+<!-- ════════════════════════ LOGIN ════════════════════════ -->
+<div id="view-login" class="view">
+  <div class="brand">Playbook<span>AI</span></div>
+  <div class="tagline">Inteligência para o seu atendimento</div>
+  <div class="card">
+    <div class="card-title">Bem-vindo</div>
+    <div class="card-sub">Digite seu número de WhatsApp para continuar. Admins usam o código de acesso.</div>
+    <label for="login-phone">Número de WhatsApp ou código admin</label>
+    <input type="tel" id="login-phone" placeholder="Ex: 11999999999" maxlength="11"/>
+    <button class="btn" id="login-btn">Entrar</button>
+    <div class="demo-divider">
+      <div class="demo-label-row">Acessos de demonstração</div>
+      <div class="demo-row">
+        <div class="demo-chip" id="demo-client-chip">
+          <div class="demo-chip-label">Cliente</div>
+          <div class="demo-chip-value">Barbearia do Rex</div>
+        </div>
+        <div class="demo-chip" id="demo-admin-chip">
+          <div class="demo-chip-label">Admin</div>
+          <div class="demo-chip-value">Painel geral</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ REGISTER ════════════════════════ -->
+<div id="view-register" class="view">
+  <div class="brand">Playbook<span>AI</span></div>
+  <div class="tagline">Primeiro acesso</div>
+  <div class="card">
+    <div class="card-title">Cadastre sua empresa</div>
+    <div class="card-sub">
+      WhatsApp: <strong id="reg-phone-display"></strong><br/>
+      Preencha os dados abaixo para começar.
+    </div>
+    <label for="reg-company">Nome da Empresa</label>
+    <input type="text" id="reg-company" placeholder="Ex: Padaria do João"/>
+    <label for="reg-cnpj">CNPJ</label>
+    <input type="text" id="reg-cnpj" placeholder="00.000.000/0001-00" maxlength="18"/>
+    <button class="btn" id="reg-btn">Criar Conta</button>
+    <button class="btn btn-ghost" id="reg-back">← Voltar</button>
+  </div>
+</div>
+
+<!-- ════════════════════════ CHAT ════════════════════════ -->
+<div id="view-chat" class="view">
+  <div class="chat-header">
+    <div class="avatar" id="chat-avatar">?</div>
+    <div class="header-info">
+      <div class="header-name" id="chat-company-name">Empresa</div>
+      <div class="header-status">Assistente de Playbook · IA</div>
+    </div>
+    <button class="playbook-btn" id="chat-playbook-btn" style="display:none">Ver Playbook</button>
+  </div>
+  <div class="messages-area" id="messages-area"></div>
+  <div class="input-bar">
+    <textarea id="chat-textarea" rows="1" placeholder="Digite sua mensagem..."></textarea>
+    <button class="send-btn" id="send-btn">
+      <svg viewBox="0 0 24 24"><path d="M2 21L23 12 2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════ ADMIN ════════════════════════ -->
+<div id="view-admin" class="view">
+  <div class="admin-header">
+    <div class="admin-brand">
+      Playbook<span style="color:var(--gold);font-style:italic">AI</span>
+      <span class="admin-badge">Admin</span>
+    </div>
+    <button id="admin-logout" style="background:none;border:none;color:var(--textDim);font-size:.8rem">Sair</button>
+  </div>
+  <div class="admin-body">
+    <div class="client-list" id="client-list">
+      <div class="list-header">
+        <span>Clientes</span>
+        <span class="list-count" id="client-count">0</span>
+      </div>
+      <div id="client-list-items"></div>
+    </div>
+    <div class="client-detail" id="client-detail">
+      <div class="detail-empty" id="detail-empty">
+        <div class="detail-empty-icon">◈</div>
+        <div class="detail-empty-text">Selecione um cliente</div>
+      </div>
+      <div id="detail-panel" style="display:none;flex-direction:column;height:100%;overflow:hidden;flex:1">
+        <div class="detail-header">
+          <button class="back-btn mobile-only" id="detail-back">←</button>
+          <div class="avatar avatar-sm" id="detail-avatar">?</div>
+          <div class="detail-info">
+            <div class="detail-name" id="detail-name"></div>
+            <div class="detail-meta" id="detail-meta"></div>
+          </div>
+        </div>
+        <div class="detail-tabs">
+          <div class="tab active" data-tab="info">Ficha</div>
+          <div class="tab" data-tab="chat">Conversa</div>
+          <div class="tab" data-tab="playbook">Playbook</div>
+        </div>
+        <div class="detail-content" id="detail-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ PLAYBOOK MODAL ════════════════════════ -->
+<div class="modal-overlay" id="playbook-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Playbook da Empresa</span>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════ ERROR TOAST ════════════════════════ -->
+<div id="error-toast">
+  <span id="error-text"></span>
+  <button onclick="hideError()">✕</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════
+const CONFIG = {
+  SUPABASE_URL: "https://bfnvkikuqdqsyypnrbnc.supabase.co",
+  SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbnZraWt1cWRxc3l5cG5yYm5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNzMzOTIsImV4cCI6MjA4ODY0OTM5Mn0.F2bi2_fffuRTKBMy4bw0_MbaIVOXW0pycFntmUs28Gk",
+  GEMINI_KEY:   "AIzaSyBe_Yd8WF0yPXeMtLmZbsh_o_JbwjM1doE",
+  ADMIN_PHONE:  "00000000000",
+  CLIENT_PHONE: "11988887777",
+};
+
+// ══════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════
+let state = {
+  phone: "",
+  client: null,
+  messages: [],
+  playbook: null,
+  isDemo: false,
+  loading: false,
+  currentView: "login",
+  adminSelected: null,
+  adminMsgs: [],
+  adminPb: null,
+  adminTab: "info",
+  adminShowDetail: false,
+  adminClients: [],
+};
+
+// ══════════════════════════════════════════════
+// DEMO DATA
+// ══════════════════════════════════════════════
+const DEMO_CLIENT = {
+  id:"demo-001", phone:CONFIG.CLIENT_PHONE,
+  company_name:"Barbearia do Rex", cnpj:"12.345.678/0001-99",
+  created_at:"2025-01-15T10:30:00Z"
+};
+const DEMO_CLIENT_2 = {
+  id:"demo-002", phone:"21977776666",
+  company_name:"Studio Beleza Vida", cnpj:"98.765.432/0001-11",
+  created_at:"2025-02-03T14:00:00Z"
+};
+const DEMO_MESSAGES = [
+  {role:"assistant",content:"Olá! Vou te ajudar a criar o playbook de atendimento da Barbearia do Rex. O que sua empresa faz e qual é o produto ou serviço principal?",created_at:"2025-01-15T10:31:00Z"},
+  {role:"user",content:"Somos uma barbearia premium no centro de São Paulo. Fazemos corte masculino, barba, sobrancelha e tratamentos capilares.",created_at:"2025-01-15T10:32:00Z"},
+  {role:"assistant",content:"Ótimo! Quem é o seu cliente ideal — perfil, faixa etária e qual é a principal dor que ele chega até você?",created_at:"2025-01-15T10:32:30Z"},
+  {role:"user",content:"Homens entre 25 e 45 anos, executivos e profissionais liberais. A dor principal é não ter tempo e querer um serviço de qualidade sem filas.",created_at:"2025-01-15T10:34:00Z"},
+  {role:"assistant",content:"Entendido. Como funciona o processo de atendimento do início ao fim — do contato até o pós-serviço?",created_at:"2025-01-15T10:34:20Z"},
+  {role:"user",content:"Cliente marca pelo WhatsApp ou app, chega e é recebido com café ou whisky, o barbeiro já sabe o histórico dele. Após o serviço enviamos uma mensagem de satisfação.",created_at:"2025-01-15T10:36:00Z"},
+  {role:"assistant",content:"Que experiência diferenciada! Quais são as principais dúvidas ou objeções que os clientes costumam ter?",created_at:"2025-01-15T10:36:20Z"},
+  {role:"user",content:'Preço é a principal — acham que é caro. Também perguntam muito sobre horários e se precisam agendar com antecedência.',created_at:"2025-01-15T10:38:00Z"},
+  {role:"assistant",content:"Perfeito. E qual é o grande diferencial da Barbearia do Rex em relação à concorrência?",created_at:"2025-01-15T10:38:20Z"},
+  {role:"user",content:"Experiência completa. Não é só corte, é um momento de cuidado masculino. Ambiente exclusivo, barbeiros especializados, produtos importados e histórico completo do cliente.",created_at:"2025-01-15T10:40:00Z"},
+  {role:"assistant",content:'Com base em tudo que você me contou, já tenho o suficiente para criar seu playbook. Clique em "Ver Playbook" acima para conferir!',created_at:"2025-01-15T10:40:30Z"},
+];
+const DEMO_MESSAGES_2 = [
+  {role:"assistant",content:"Olá! Vou te ajudar a criar o playbook de atendimento do Studio Beleza Vida. O que sua empresa faz e qual é o produto ou serviço principal?",created_at:"2025-02-03T14:01:00Z"},
+  {role:"user",content:"Somos um studio de beleza feminino. Fazemos cabelo, manicure, design de sobrancelha e maquiagem para noivas.",created_at:"2025-02-03T14:02:30Z"},
+  {role:"assistant",content:"Ótimo! Quem é a sua cliente ideal e qual é a principal dor que ela chega até você?",created_at:"2025-02-03T14:02:50Z"},
+];
+const DEMO_PLAYBOOK = {
+  content:`# Playbook de Atendimento — Barbearia do Rex
+
+## Sobre a Empresa
+A Barbearia do Rex é uma barbearia premium localizada no centro de São Paulo, especializada em cortes masculinos, barba, sobrancelha e tratamentos capilares. O foco é oferecer uma experiência completa de cuidado masculino em um ambiente exclusivo.
+
+## Público-Alvo
+Homens entre 25 e 45 anos, majoritariamente executivos e profissionais liberais com alta demanda de tempo. A principal dor é a falta de tempo aliada ao desejo por um serviço de qualidade sem espera. Valorizam exclusividade, pontualidade e ambiente sofisticado.
+
+## Processo de Atendimento
+
+1. **Primeiro contato:** Cliente agenda via WhatsApp ou aplicativo próprio
+2. **Confirmação:** Envio automático de confirmação com horário e nome do barbeiro
+3. **Recepção:** Cliente é recebido com café ou whisky — sem fila, sem espera
+4. **Atendimento:** Barbeiro acessa histórico completo (estilo preferido, produtos usados, últimas visitas)
+5. **Pós-serviço:** Mensagem de satisfação enviada até 2 horas após o atendimento
+
+## Objeções Frequentes e Respostas
+
+**"Está caro":** Aqui você não paga só pelo corte — paga pela experiência, pelo barbeiro que conhece seu estilo, pelo ambiente e pelo seu tempo. Clientes que vieram de barbearias comuns nunca voltaram atrás.
+
+**"Preciso agendar com antecedência?":** Recomendamos agendar, mas temos horários para encaixes. O agendamento garante que seu barbeiro favorito esteja disponível para você.
+
+**"Quais formas de pagamento?":** Aceitamos Pix, cartão de débito e crédito, e também temos planos mensais com desconto para clientes fixos.
+
+## Diferenciais
+Experiência completa de cuidado masculino — não é apenas um corte, é um ritual. Ambiente exclusivo com produtos importados, barbeiros especializados, histórico individualizado do cliente e atendimento sem filas com hora marcada.
+
+## Scripts de Atendimento
+
+**Abordagem inicial:**
+Olá! Aqui é a Barbearia do Rex. Vi que você entrou em contato — posso te ajudar a agendar um horário? Temos disponibilidade hoje e amanhã com nossos barbeiros.
+
+**Quando o cliente pergunta o preço:**
+Nosso corte começa em R$ 80 e inclui a experiência completa: recepção, histórico do seu estilo, produtos premium e pós-atendimento. Muitos clientes nos contam que é o melhor investimento semanal que fazem. Posso reservar um horário para você conhecer pessoalmente?
+
+**Fechamento:**
+Ótimo! Vou confirmar: [dia] às [horário] com [barbeiro]. Você receberá uma confirmação aqui no WhatsApp. Caso precise reagendar, nos avise com pelo menos 2 horas de antecedência. Até lá!`,
+  created_at:"2025-01-15T10:41:00Z"
+};
+
+// ══════════════════════════════════════════════
+// DB
+// ══════════════════════════════════════════════
+async function db(path, opts={}) {
+  const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${path}`, {
+    ...opts,
+    headers:{
+      apikey: CONFIG.SUPABASE_KEY,
+      Authorization:`Bearer ${CONFIG.SUPABASE_KEY}`,
+      "Content-Type":"application/json",
+      Prefer:"return=representation",
+      ...(opts.headers||{})
+    }
+  });
+  const t = await res.text();
+  if (!res.ok) throw new Error(t);
+  return t ? JSON.parse(t) : null;
+}
+const getClient    = p => db(`clients?phone=eq.${encodeURIComponent(p)}&select=*`).then(d=>d?.[0]??null);
+const createClient = (p,n,c) => db("clients",{method:"POST",body:JSON.stringify({phone:p,company_name:n,cnpj:c})});
+const getMessages  = p => db(`messages?client_phone=eq.${encodeURIComponent(p)}&order=created_at.asc&select=*`);
+const saveMsg      = (cp,r,c) => db("messages",{method:"POST",body:JSON.stringify({client_phone:cp,role:r,content:c})});
+const savePlaybook = (cp,c) => db("playbooks",{method:"POST",body:JSON.stringify({client_phone:cp,content:c})});
+const getAllClients = () => db("clients?select=*&order=created_at.desc");
+const getPlaybook  = p => db(`playbooks?client_phone=eq.${encodeURIComponent(p)}&order=created_at.desc&limit=1`).then(d=>d?.[0]??null);
+
+// ══════════════════════════════════════════════
+// GEMINI
+// ══════════════════════════════════════════════
+const SYSTEM_PROMPT = `Você é um especialista em criar playbooks de atendimento para empresas brasileiras via WhatsApp.
+
+REGRAS ABSOLUTAS:
+- MÁXIMO 2 frases por resposta. Seja direto e objetivo.
+- Faça apenas UMA pergunta por vez.
+- Sem emojis. Sem listas. Só texto corrido.
+- Quando tiver informações suficientes (mínimo 5 trocas), gere o playbook completo.
+
+FLUXO DE PERGUNTAS:
+1) O que sua empresa faz e qual o produto/serviço principal?
+2) Quem é seu cliente ideal — perfil, faixa etária, dor principal?
+3) Como funciona o processo de venda ou atendimento do início ao fim?
+4) Quais são as principais dúvidas ou objeções dos clientes?
+5) Qual é o grande diferencial da sua empresa em relação à concorrência?
+
+QUANDO GERAR O PLAYBOOK:
+Após coletar informações suficientes, escreva exatamente neste formato:
+
+[PLAYBOOK_START]
+# Playbook de Atendimento — [Nome da Empresa]
+
+## Sobre a Empresa
+[descrição]
+
+## Público-Alvo
+[perfil do cliente ideal]
+
+## Processo de Atendimento
+[passo a passo]
+
+## Objeções Frequentes e Respostas
+**[objeção 1]:** [resposta]
+**[objeção 2]:** [resposta]
+
+## Diferenciais
+[diferenciais]
+
+## Scripts de Atendimento
+
+**Abordagem inicial:**
+[script]
+
+**Quando o cliente pergunta o preço:**
+[script]
+
+**Fechamento:**
+[script]
+[PLAYBOOK_END]`;
+
+async function callGemini(history) {
+  const contents = history.map(m=>({
+    role: m.role==="assistant"?"model":"user",
+    parts:[{text:m.content}]
+  }));
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${CONFIG.GEMINI_KEY}`,
+    {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        system_instruction:{parts:[{text:SYSTEM_PROMPT}]},
+        contents,
+        generationConfig:{maxOutputTokens:2048,temperature:0.7}
+      })
+    }
+  );
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "Erro ao processar.";
+}
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+function formatCNPJ(v) {
+  return v.replace(/\D/g,"")
+    .replace(/^(\d{2})(\d)/,"$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/,"$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/,".$1/$2")
+    .replace(/(\d{4})(\d)/,"$1-$2")
+    .slice(0,18);
+}
+function formatPhone(v) { return v.replace(/\D/g,"").slice(0,11); }
+function timeLabel(iso) {
+  if (!iso) return "";
+  return new Date(iso).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+function renderMarkdown(text) {
+  return text
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/^# (.+)$/gm,"<h1>$1</h1>")
+    .replace(/^## (.+)$/gm,"<h2>$1</h2>")
+    .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+    .replace(/\n\n/g,"</p><p>")
+    .replace(/\n/g,"<br/>");
+}
+function showError(msg) {
+  document.getElementById("error-text").textContent = msg;
+  document.getElementById("error-toast").classList.add("show");
+  setTimeout(hideError, 5000);
+}
+function hideError() { document.getElementById("error-toast").classList.remove("show"); }
+
+// ══════════════════════════════════════════════
+// VIEW ROUTER
+// ══════════════════════════════════════════════
+function showView(name) {
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-"+name).classList.add("active");
+  state.currentView = name;
+}
+
+// ══════════════════════════════════════════════
+// CHAT RENDERING
+// ══════════════════════════════════════════════
+function makeBubble(msg) {
+  const row = document.createElement("div");
+  row.className = `msg-row ${msg.role}`;
+  row.innerHTML = `
+    <div class="bubble ${msg.role}">
+      ${escHtml(msg.content)}
+      <div class="bubble-time">${timeLabel(msg.created_at)}</div>
+    </div>`;
+  return row;
+}
+function escHtml(t) {
+  return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br/>");
+}
+function makeTyping() {
+  const row = document.createElement("div");
+  row.className = "msg-row assistant";
+  row.id = "typing-bubble";
+  row.innerHTML = `<div class="bubble assistant"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  return row;
+}
+function renderMessages() {
+  const area = document.getElementById("messages-area");
+  area.innerHTML = "";
+  if (state.isDemo) {
+    const banner = document.createElement("div");
+    banner.className = "demo-banner";
+    banner.innerHTML = "<span>◈</span><span>Perfil de demonstração — Barbearia do Rex. Continue a conversa normalmente ou veja o playbook gerado.</span>";
+    area.appendChild(banner);
+  }
+  state.messages.forEach(m => area.appendChild(makeBubble(m)));
+  scrollToBottom();
+}
+function appendMessage(msg) {
+  const area = document.getElementById("messages-area");
+  area.appendChild(makeBubble(msg));
+  scrollToBottom();
+}
+function showTyping() {
+  const area = document.getElementById("messages-area");
+  area.appendChild(makeTyping());
+  scrollToBottom();
+}
+function removeTyping() {
+  document.getElementById("typing-bubble")?.remove();
+}
+function scrollToBottom() {
+  const area = document.getElementById("messages-area");
+  area.scrollTop = area.scrollHeight;
+}
+function updateChatHeader() {
+  const c = state.client;
+  document.getElementById("chat-company-name").textContent = c?.company_name || "Empresa";
+  document.getElementById("chat-avatar").textContent = (c?.company_name||"?")[0].toUpperCase();
+  const pb = document.getElementById("chat-playbook-btn");
+  pb.style.display = state.playbook ? "block" : "none";
+}
+
+// ══════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════
+async function handleLogin(ph) {
+  if (!ph) return;
+  setLoading(true);
+  try {
+    if (ph === CONFIG.ADMIN_PHONE) {
+      setLoading(false);
+      loadAdminView();
+      return;
+    }
+    state.phone = ph;
+    if (ph === CONFIG.CLIENT_PHONE) {
+      state.client = DEMO_CLIENT;
+      state.messages = [...DEMO_MESSAGES];
+      state.playbook = DEMO_PLAYBOOK;
+      state.isDemo = true;
+      renderMessages();
+      updateChatHeader();
+      showView("chat");
+      setLoading(false);
+      return;
+    }
+    const existing = await getClient(ph);
+    if (existing) {
+      state.client = existing;
+      const [ms, pb] = await Promise.all([getMessages(ph), getPlaybook(ph)]);
+      state.messages = ms||[];
+      state.playbook = pb;
+      state.isDemo = false;
+      if (!ms||ms.length===0) await sendWelcome(ph);
+      renderMessages();
+      updateChatHeader();
+      showView("chat");
+    } else {
+      document.getElementById("reg-phone-display").textContent = ph;
+      showView("register");
+    }
+  } catch(e) {
+    showError("Erro de conexão. Verifique as credenciais do Supabase.");
+  }
+  setLoading(false);
+}
+
+// ══════════════════════════════════════════════
+// REGISTER
+// ══════════════════════════════════════════════
+async function handleRegister() {
+  const company = document.getElementById("reg-company").value.trim();
+  const cnpj    = document.getElementById("reg-cnpj").value.trim();
+  if (!company||!cnpj) return;
+  setLoading(true);
+  try {
+    await createClient(state.phone, company, cnpj);
+    const c = await getClient(state.phone);
+    state.client = c;
+    state.messages = [];
+    state.isDemo = false;
+    await sendWelcome(state.phone);
+    renderMessages();
+    updateChatHeader();
+    showView("chat");
+  } catch(e) {
+    showError("Erro ao cadastrar. Tente novamente.");
+  }
+  setLoading(false);
+}
+
+async function sendWelcome(ph) {
+  const txt = "Olá! Vou te ajudar a criar o playbook de atendimento da sua empresa. O que sua empresa faz e qual é o produto ou serviço principal?";
+  const m = {role:"assistant",content:txt,created_at:new Date().toISOString()};
+  state.messages.push(m);
+  await saveMsg(ph,"assistant",txt);
+}
+
+// ══════════════════════════════════════════════
+// SEND MESSAGE
+// ══════════════════════════════════════════════
+async function handleSend() {
+  const ta = document.getElementById("chat-textarea");
+  const text = ta.value.trim();
+  if (!text||state.loading) return;
+  ta.value = ""; ta.style.height="42px";
+
+  const userMsg = {role:"user",content:text,created_at:new Date().toISOString()};
+  state.messages.push(userMsg);
+  appendMessage(userMsg);
+  state.loading = true;
+  updateSendBtn();
+  showTyping();
+
+  try {
+    if (!state.isDemo) await saveMsg(state.phone,"user",text);
+    const response = await callGemini(state.messages);
+    removeTyping();
+
+    if (response.includes("[PLAYBOOK_START]")&&response.includes("[PLAYBOOK_END]")) {
+      const pbContent = (response.match(/\[PLAYBOOK_START\]([\s\S]*?)\[PLAYBOOK_END\]/)||[])[1]?.trim()||"";
+      const pre = response.split("[PLAYBOOK_START]")[0].trim();
+      const aiText = pre||"Pronto! Seu playbook foi criado com base em tudo que você me contou.";
+      const aiMsg = {role:"assistant",content:aiText,created_at:new Date().toISOString()};
+      state.messages.push(aiMsg);
+      appendMessage(aiMsg);
+      if (!state.isDemo) await saveMsg(state.phone,"assistant",aiText);
+      if (pbContent) {
+        if (!state.isDemo) await savePlaybook(state.phone,pbContent);
+        state.playbook = {content:pbContent};
+        updateChatHeader();
+      }
+    } else {
+      const aiMsg = {role:"assistant",content:response,created_at:new Date().toISOString()};
+      state.messages.push(aiMsg);
+      appendMessage(aiMsg);
+      if (!state.isDemo) await saveMsg(state.phone,"assistant",response);
+    }
+  } catch(e) {
+    removeTyping();
+    const errMsg = {role:"assistant",content:"Erro ao processar. Tente novamente.",created_at:new Date().toISOString()};
+    state.messages.push(errMsg);
+    appendMessage(errMsg);
+  }
+  state.loading = false;
+  updateSendBtn();
+  ta.focus();
+}
+
+function updateSendBtn() {
+  document.getElementById("send-btn").disabled = state.loading;
+}
+
+// ══════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════
+async function loadAdminView() {
+  showView("admin");
+  state.adminClients = [DEMO_CLIENT, DEMO_CLIENT_2];
+  state.adminShowDetail = false;
+  renderClientList();
+  try {
+    const real = await getAllClients();
+    if (real&&real.length>0) {
+      const demoPhones = [DEMO_CLIENT.phone,DEMO_CLIENT_2.phone];
+      const extras = real.filter(c=>!demoPhones.includes(c.phone));
+      state.adminClients = [DEMO_CLIENT,DEMO_CLIENT_2,...extras];
+      renderClientList();
+    }
+  } catch(e) { /* use demo data */ }
+}
+
+function renderClientList() {
+  const container = document.getElementById("client-list-items");
+  document.getElementById("client-count").textContent = state.adminClients.length;
+  container.innerHTML = "";
+  state.adminClients.forEach(c=>{
+    const st = c.phone===DEMO_CLIENT.phone?"done":c.phone===DEMO_CLIENT_2.phone?"active":"new";
+    const el = document.createElement("div");
+    el.className = `client-item${state.adminSelected?.phone===c.phone?" active":""}`;
+    el.innerHTML = `
+      <div class="client-item-name"><span class="status-dot status-${st}"></span>${escHtml(c.company_name)}</div>
+      <div class="client-item-phone">${c.phone}</div>
+      <div class="client-item-date">${new Date(c.created_at).toLocaleDateString("pt-BR")}</div>`;
+    el.onclick = ()=>selectClient(c);
+    container.appendChild(el);
+  });
+}
+
+async function selectClient(c) {
+  state.adminSelected = c;
+  state.adminTab = "info";
+  state.adminShowDetail = true;
+  applyMobileLayout();
+  renderClientList();
+
+  if (c.phone===DEMO_CLIENT.phone) {
+    state.adminMsgs = DEMO_MESSAGES;
+    state.adminPb = DEMO_PLAYBOOK;
+  } else if (c.phone===DEMO_CLIENT_2.phone) {
+    state.adminMsgs = DEMO_MESSAGES_2;
+    state.adminPb = null;
+  } else {
+    state.adminMsgs = [];
+    state.adminPb = null;
+    const [m,p] = await Promise.all([getMessages(c.phone),getPlaybook(c.phone)]);
+    state.adminMsgs = m||[];
+    state.adminPb = p;
+  }
+
+  // show detail panel
+  document.getElementById("detail-empty").style.display="none";
+  const panel = document.getElementById("detail-panel");
+  panel.style.display="flex";
+
+  // header
+  document.getElementById("detail-avatar").textContent = c.company_name[0].toUpperCase();
+  document.getElementById("detail-name").textContent = c.company_name;
+  document.getElementById("detail-meta").textContent = `${c.phone} · ${c.cnpj}`;
+
+  renderDetailContent();
+}
+
+function renderDetailContent() {
+  // tab highlight
+  document.querySelectorAll(".detail-tabs .tab").forEach(t=>{
+    t.classList.toggle("active", t.dataset.tab===state.adminTab);
+  });
+  const content = document.getElementById("detail-content");
+  const c = state.adminSelected;
+  const pb = state.adminPb;
+  const msgs = state.adminMsgs;
+  const isDemo = c.phone===DEMO_CLIENT.phone||c.phone===DEMO_CLIENT_2.phone;
+
+  if (state.adminTab==="info") {
+    const statusColor = pb?"var(--green)":msgs.length>0?"var(--purpleL)":"var(--textDim)";
+    const statusText  = pb?"✓ Playbook gerado":msgs.length>0?"Em conversa...":"Ainda não iniciou";
+    content.innerHTML = `
+      ${isDemo?`<div class="demo-banner" style="margin-bottom:16px"><span>◈</span><span>Perfil de demonstração</span></div>`:""}
+      <div class="info-grid">
+        <div class="info-card"><div class="info-card-label">Empresa</div><div class="info-card-value">${escHtml(c.company_name)}</div></div>
+        <div class="info-card"><div class="info-card-label">Telefone</div><div class="info-card-value">${c.phone}</div></div>
+        <div class="info-card"><div class="info-card-label">CNPJ</div><div class="info-card-value">${escHtml(c.cnpj)}</div></div>
+        <div class="info-card"><div class="info-card-label">Cadastro</div><div class="info-card-value">${new Date(c.created_at).toLocaleDateString("pt-BR")}</div></div>
+      </div>
+      <div class="info-card" style="border-color:${pb?"rgba(52,211,153,.3)":"var(--border)"}">
+        <div class="info-card-label">Status</div>
+        <div class="info-card-value" style="font-size:.85rem;color:${statusColor}">${statusText}</div>
+      </div>`;
+  } else if (state.adminTab==="chat") {
+    if (!msgs.length) { content.innerHTML=`<div class="empty-state">Sem mensagens ainda.</div>`; return; }
+    content.innerHTML = `<div class="chat-log"></div>`;
+    const log = content.querySelector(".chat-log");
+    msgs.forEach(m=>{
+      const row = document.createElement("div");
+      row.className=`msg-row ${m.role}`;
+      row.innerHTML=`<div class="bubble ${m.role}">${escHtml(m.content)}<div class="bubble-time">${timeLabel(m.created_at)}</div></div>`;
+      log.appendChild(row);
+    });
+  } else {
+    if (!pb) { content.innerHTML=`<div class="empty-state">Playbook ainda não gerado.</div>`; return; }
+    content.innerHTML=`<div class="pb-content"><p>${renderMarkdown(pb.content)}</p></div>`;
+  }
+}
+
+function applyMobileLayout() {
+  const list = document.getElementById("client-list");
+  const detail = document.getElementById("client-detail");
+  if (window.innerWidth<=640) {
+    list.classList.toggle("mobile-hidden", state.adminShowDetail);
+    detail.classList.toggle("mobile-hidden", !state.adminShowDetail);
+  } else {
+    list.classList.remove("mobile-hidden");
+    detail.classList.remove("mobile-hidden");
+  }
+}
+
+// ══════════════════════════════════════════════
+// LOADING STATE
+// ══════════════════════════════════════════════
+function setLoading(v) {
+  state.loading = v;
+  document.getElementById("login-btn").disabled = v;
+  document.getElementById("login-btn").textContent = v?"Verificando...":"Entrar";
+  document.getElementById("reg-btn").disabled = v;
+  document.getElementById("reg-btn").textContent = v?"Cadastrando...":"Criar Conta";
+}
+
+// ══════════════════════════════════════════════
+// EVENT LISTENERS
+// ══════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", ()=>{
+  showView("login");
+
+  // Login
+  const loginPhone = document.getElementById("login-phone");
+  loginPhone.addEventListener("input", e=>{ e.target.value = formatPhone(e.target.value); });
+  loginPhone.addEventListener("keydown", e=>{ if(e.key==="Enter") handleLogin(loginPhone.value.trim()); });
+  document.getElementById("login-btn").addEventListener("click", ()=>handleLogin(loginPhone.value.trim()));
+
+  // Demo chips
+  document.getElementById("demo-client-chip").addEventListener("click", ()=>handleLogin(CONFIG.CLIENT_PHONE));
+  document.getElementById("demo-admin-chip").addEventListener("click",  ()=>handleLogin(CONFIG.ADMIN_PHONE));
+
+  // Register
+  const regCnpj = document.getElementById("reg-cnpj");
+  regCnpj.addEventListener("input", e=>{ e.target.value = formatCNPJ(e.target.value); });
+  document.getElementById("reg-btn").addEventListener("click", handleRegister);
+  document.getElementById("reg-back").addEventListener("click", ()=>showView("login"));
+
+  // Chat textarea auto-resize
+  const ta = document.getElementById("chat-textarea");
+  ta.addEventListener("input", ()=>{
+    ta.style.height="42px";
+    ta.style.height = Math.min(ta.scrollHeight,100)+"px";
+  });
+  ta.addEventListener("keydown", e=>{
+    if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();handleSend();}
+  });
+  document.getElementById("send-btn").addEventListener("click", handleSend);
+
+  // Playbook modal
+  document.getElementById("chat-playbook-btn").addEventListener("click", ()=>{
+    if (!state.playbook) return;
+    document.getElementById("modal-body").innerHTML = `<p>${renderMarkdown(state.playbook.content)}</p>`;
+    document.getElementById("playbook-modal").classList.add("open");
+  });
+  document.getElementById("modal-close").addEventListener("click", ()=>{
+    document.getElementById("playbook-modal").classList.remove("open");
+  });
+  document.getElementById("playbook-modal").addEventListener("click", e=>{
+    if (e.target===e.currentTarget) document.getElementById("playbook-modal").classList.remove("open");
+  });
+
+  // Admin
+  document.getElementById("admin-logout").addEventListener("click", ()=>showView("login"));
+  document.getElementById("detail-back").addEventListener("click", ()=>{
+    state.adminShowDetail = false;
+    state.adminSelected = null;
+    applyMobileLayout();
+    document.getElementById("detail-empty").style.display="flex";
+    document.getElementById("detail-panel").style.display="none";
+    renderClientList();
+  });
+
+  document.querySelectorAll(".detail-tabs .tab").forEach(t=>{
+    t.addEventListener("click", ()=>{
+      state.adminTab = t.dataset.tab;
+      renderDetailContent();
+    });
+  });
+
+  window.addEventListener("resize", applyMobileLayout);
+});
+</script>
 </body>
 </html>
